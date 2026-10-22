@@ -29,7 +29,7 @@ Build mode: fast
   Learner check: Select different cleaning options, type a custom instruction, click "Clean Data", and verify the cartoon mascot appears with the cleaning status message.
   Commit: `Add interactive cleaning controls and mascot processing state`
 
-- [ ] **3. Core Cleaning Engine & "What Changed / What Didn't" Audit Log**
+- [x] **3. Core Cleaning Engine & "What Changed / What Didn't" Audit Log**
   Becomes usable: Clicking "Clean Data" runs the backend cleaning pipeline using pandas (and Google Gemini API for custom prompts), and displays the split "What Changed" and "What Didn't Change" audit log cards alongside post-cleaning dimensions.
   Why now: Implements the project's unique kernel—building trust by showing an explicit, itemized accounting of every modification made and every potential issue intentionally preserved.
   PRD ref: `prd.md > Features and Behavior (5. "What Changed & What Didn't" Audit Log & Overview)`, `prd.md > The Unique Kernel`
@@ -39,7 +39,7 @@ Build mode: fast
   Learner check: Run cleaning on a messy file and review the audit log cards to verify that every change and preserved field is clearly reported.
   Commit: `Implement core cleaning engine and trust audit log`
 
-- [ ] **4. Clean Spreadsheet Export & Complete Journey Loop**
+- [x] **4. Clean Spreadsheet Export & Complete Journey Loop**
   Becomes usable: A prominent "Download Cleaned File" button delivers the tidied Excel workbook directly to the user's browser, and a "Clean Another File" button resets the app for the next file.
   Why now: Completes the full end-to-end journey from arrival to verified clean download, ready for the demo video and Render deployment.
   PRD ref: `prd.md > Features and Behavior (6. Clean File Export)`, `prd.md > States and Boundaries (Completed State)`
