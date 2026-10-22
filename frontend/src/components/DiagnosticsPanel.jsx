@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, Columns, AlertTriangle, CheckCircle, FileText } from 'lucide-react';
+import { Layers, Columns, AlertTriangle, FileSpreadsheet, RotateCcw } from 'lucide-react';
 
 export default function DiagnosticsPanel({ diagnostics, onReset }) {
   if (!diagnostics) return null;
@@ -15,75 +15,102 @@ export default function DiagnosticsPanel({ diagnostics, onReset }) {
   } = diagnostics;
 
   return (
-    <div className="bg-white border border-cardborder rounded-2xl p-6 sm:p-8 shadow-sm">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-cardborder gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-spruce-light text-spruce rounded-xl">
-            <FileText className="w-5 h-5" />
+    <div className="bg-white border-2 border-cardborder rounded-3xl p-6 sm:p-8 shadow-md">
+      {/* File Info Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b-2 border-slate-100 gap-3">
+        <div className="flex items-center gap-3.5">
+          <div className="p-3 bg-spray-light text-spray rounded-2xl border border-spray/20 shadow-sm">
+            <FileSpreadsheet className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-ink">{filename}</h3>
-            <p className="text-xs text-muted">
-              Active Sheet: <span className="font-semibold text-ink">{sheet_name || 'Sheet1'}</span>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-black text-ink">{filename}</h3>
+              <span className="px-2 py-0.5 bg-spruce-light text-spruce text-xs font-bold rounded-md">
+                Scanned ✓
+              </span>
+            </div>
+            <p className="text-xs text-muted font-medium mt-0.5">
+              Sheet: <span className="font-bold text-ink">{sheet_name || 'Sheet1'}</span>
             </p>
           </div>
         </div>
 
         <button
           onClick={onReset}
-          className="text-xs font-semibold text-muted hover:text-ink px-3 py-1.5 border border-cardborder hover:bg-slate-50 rounded-lg transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-muted hover:text-ink px-3.5 py-2 border-2 border-slate-200 hover:bg-slate-50 rounded-xl transition-all self-start sm:self-auto shadow-2xs"
         >
-          Change File
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span>Upload Different File</span>
         </button>
       </div>
 
-      {/* Metric Cards */}
+      {/* Colorful Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-        <div className="p-4 bg-slate-50 border border-cardborder/60 rounded-xl">
-          <div className="flex items-center gap-2 text-muted text-xs font-bold uppercase tracking-wider mb-1">
-            <Layers className="w-4 h-4 text-spruce" />
-            <span>Total Rows</span>
+        {/* Total Rows Card */}
+        <div className="p-5 bg-gradient-to-br from-white to-spruce-light/30 border-2 border-spruce/30 rounded-2xl shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-black uppercase tracking-wider text-spruce">
+              Total Rows
+            </span>
+            <div className="p-2 bg-spruce-light rounded-xl text-spruce">
+              <Layers className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-extrabold text-ink">
+          <div className="text-3xl font-black text-ink">
             {total_rows?.toLocaleString() ?? 0}
           </div>
+          <p className="text-xs text-muted mt-1 font-medium">Data entries found</p>
         </div>
 
-        <div className="p-4 bg-slate-50 border border-cardborder/60 rounded-xl">
-          <div className="flex items-center gap-2 text-muted text-xs font-bold uppercase tracking-wider mb-1">
-            <Columns className="w-4 h-4 text-spray" />
-            <span>Columns</span>
+        {/* Total Columns Card */}
+        <div className="p-5 bg-gradient-to-br from-white to-spray-light/30 border-2 border-spray/30 rounded-2xl shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-black uppercase tracking-wider text-spray">
+              Columns
+            </span>
+            <div className="p-2 bg-spray-light rounded-xl text-spray">
+              <Columns className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-extrabold text-ink">
+          <div className="text-3xl font-black text-ink">
             {total_columns ?? 0}
           </div>
+          <p className="text-xs text-muted mt-1 font-medium">Fields detected</p>
         </div>
 
-        <div className="p-4 bg-slate-50 border border-cardborder/60 rounded-xl">
-          <div className="flex items-center gap-2 text-muted text-xs font-bold uppercase tracking-wider mb-1">
-            <AlertTriangle className="w-4 h-4 text-sponge" />
-            <span>Missing Cells</span>
+        {/* Missing Values Card */}
+        <div className="p-5 bg-gradient-to-br from-white to-sponge-light/30 border-2 border-sponge/40 rounded-2xl shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-black uppercase tracking-wider text-sponge">
+              Missing Values
+            </span>
+            <div className="p-2 bg-sponge-light rounded-xl text-sponge">
+              <AlertTriangle className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-extrabold text-ink">
-            {missing_cells?.toLocaleString() ?? 0}
-            <span className="text-xs font-medium text-muted ml-2">
-              ({missing_percentage ?? 0}%)
+          <div className="flex items-baseline gap-2">
+            <div className="text-3xl font-black text-ink">
+              {missing_cells?.toLocaleString() ?? 0}
+            </div>
+            <span className="text-xs font-bold px-2 py-0.5 bg-sponge-light text-sponge rounded-md">
+              {missing_percentage ?? 0}% null
             </span>
           </div>
+          <p className="text-xs text-muted mt-1 font-medium">Empty cells to tidy up</p>
         </div>
       </div>
 
       {/* Column Tags */}
       {columns.length > 0 && (
-        <div className="mt-6 pt-5 border-t border-cardborder/60">
-          <h4 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-            Identified Columns ({columns.length}):
+        <div className="mt-6 pt-5 border-t-2 border-slate-100">
+          <h4 className="text-xs font-black text-muted uppercase tracking-wider mb-3">
+            Detected Columns ({columns.length}):
           </h4>
-          <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
+          <div className="flex flex-wrap gap-2 max-h-36 overflow-y-auto pr-1">
             {columns.map((col, idx) => (
               <span
                 key={idx}
-                className="inline-block px-2.5 py-1 bg-slate-100 border border-slate-200 text-slate-700 text-xs rounded-md font-mono"
+                className="inline-flex items-center px-3 py-1 bg-slate-50 border border-slate-200 text-ink font-semibold text-xs rounded-lg font-mono shadow-2xs"
               >
                 {col}
               </span>

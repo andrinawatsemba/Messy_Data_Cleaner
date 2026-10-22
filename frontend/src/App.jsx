@@ -69,11 +69,17 @@ export default function App() {
     formData.append('options', JSON.stringify(cleaningOptions));
     formData.append('custom_instruction', customInstruction);
 
+    // Ensure animation displays for at least 1.8 seconds so it is clearly visible
+    const minAnimationDelay = new Promise((resolve) => setTimeout(resolve, 1800));
+
     try {
-      const response = await fetch('/api/clean', {
-        method: 'POST',
-        body: formData,
-      });
+      const [response] = await Promise.all([
+        fetch('/api/clean', {
+          method: 'POST',
+          body: formData,
+        }),
+        minAnimationDelay,
+      ]);
 
       const data = await response.json();
 
@@ -98,16 +104,16 @@ export default function App() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 sm:py-10">
+    <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
       <Header />
 
       <main className="mt-8 space-y-6">
         {errorMessage && (
-          <div className="p-4 bg-caddy-light border border-caddy/30 rounded-2xl flex items-center justify-between text-caddy text-sm font-medium">
+          <div className="p-4 bg-caddy-light border-2 border-caddy/30 rounded-2xl flex items-center justify-between text-caddy text-sm font-bold shadow-sm">
             <span>{errorMessage}</span>
             <button
               onClick={() => setErrorMessage(null)}
-              className="text-xs uppercase font-bold underline ml-4 hover:opacity-80"
+              className="text-xs uppercase font-black underline ml-4 hover:opacity-80"
             >
               Dismiss
             </button>
@@ -133,7 +139,7 @@ export default function App() {
         )}
       </main>
 
-      <footer className="mt-16 text-center text-xs text-muted">
+      <footer className="mt-16 text-center text-xs text-muted font-semibold">
         Messy Data Cleaner • Devpost Build With AI Basics Proof-of-Concept
       </footer>
     </div>

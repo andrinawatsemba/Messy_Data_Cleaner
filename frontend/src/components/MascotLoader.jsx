@@ -1,36 +1,45 @@
 import React from 'react';
 import mascotSvg from '../assets/mascot.svg';
+import { Sparkles } from 'lucide-react';
 
 export default function MascotLoader({ statusText = "Tidying up your rows and sweeping nulls..." }) {
   return (
-    <div className="bg-white border border-cardborder rounded-2xl p-10 text-center shadow-sm animate-fadeIn">
+    <div className="bg-white border-2 border-spruce/30 rounded-3xl p-10 sm:p-14 text-center shadow-xl animate-fadeIn">
+      {/* Animated Mascot Hero */}
       <div className="relative inline-block mb-6">
-        <div className="w-24 h-24 mx-auto p-3 bg-spruce-light/40 rounded-3xl border border-spruce/20 animate-bounce duration-1000 flex items-center justify-center">
+        <div className="w-32 h-32 sm:w-36 sm:h-36 mx-auto p-4 bg-gradient-to-b from-spruce-light/40 to-white rounded-full border-3 border-spruce/30 shadow-md flex items-center justify-center animate-bob">
           <img
             src={mascotSvg}
             alt="Cleaning mascot at work"
-            className="w-16 h-16"
+            className="w-24 h-24 sm:w-28 sm:h-28"
           />
         </div>
-        <div className="absolute -top-1 -right-1 w-6 h-6 bg-sponge rounded-full text-white text-xs flex items-center justify-center animate-ping opacity-75">
-          ✨
+        
+        {/* Floating Bubble Badges */}
+        <div className="absolute -top-1 -right-2 px-3 py-1 bg-sponge text-white text-xs font-black rounded-full shadow-md flex items-center gap-1 animate-bounce">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Sweeping!</span>
+        </div>
+        <div className="absolute bottom-1 -left-2 px-2.5 py-0.5 bg-spray text-white text-xs font-black rounded-full shadow-md">
+          🧼 Scrubbing
         </div>
       </div>
 
-      <h3 className="text-xl font-extrabold text-ink tracking-tight">
-        Cleaning in Progress
+      <h3 className="text-2xl sm:text-3xl font-black text-ink tracking-tight">
+        Cleaning In Progress...
       </h3>
-      <p className="mt-1.5 text-sm text-muted max-w-sm mx-auto">
+      <p className="mt-2 text-base text-muted font-medium max-w-md mx-auto">
         {statusText}
       </p>
 
-      {/* Animated progress bar */}
-      <div className="mt-6 w-full max-w-xs mx-auto bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200">
-        <div className="bg-spruce h-full rounded-full animate-pulse w-3/4 duration-700" />
+      {/* Animated Progress Bar */}
+      <div className="mt-8 w-full max-w-sm mx-auto bg-slate-100 rounded-full h-3.5 overflow-hidden border-2 border-slate-200 shadow-inner">
+        <div className="bg-gradient-to-r from-spray via-spruce to-sponge h-full rounded-full animate-pulse w-full duration-1000" />
       </div>
 
-      <div className="mt-4 text-xs font-semibold text-spruce uppercase tracking-wider">
-        Almost done...
+      <div className="mt-4 flex items-center justify-center gap-2 text-xs font-bold text-spruce uppercase tracking-wider">
+        <span className="w-2 h-2 rounded-full bg-spruce animate-ping" />
+        <span>Organizing cells and preparing change log</span>
       </div>
     </div>
   );

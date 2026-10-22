@@ -3,10 +3,31 @@
 @tailwind utilities;
 
 body {
-  background-color: #eef3f0;
+  background-color: #e6f0eb;
   background-image: 
-    linear-gradient(#d8e3dc 1px, transparent 1px),
-    linear-gradient(90deg, #d8e3dc 1px, transparent 1px);
-  background-size: 24px 24px;
+    linear-gradient(#c8ded3 1.5px, transparent 1.5px),
+    linear-gradient(90deg, #c8ded3 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1a2923;
+}
+
+/* Custom whimsical animations */
+@keyframes bob {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-3deg); }
+}
+
+.animate-bob {
+  animation: bob 2s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+.animate-sweep {
+  animation: sweep 1.2s ease-in-out infinite;
 }

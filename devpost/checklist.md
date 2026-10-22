@@ -19,7 +19,7 @@ Build mode: fast
   Learner check: Open `http://localhost:5173` in your browser, drop a sample Excel file into the dropzone, and confirm the diagnostic cards populate with row, column, and missing values counts.
   Commit: `Add file upload, scanning engine, and live diagnostics panel`
 
-- [ ] **2. Interactive Cleaning Prompts & Mascot Processing State**
+- [x] **2. Interactive Cleaning Prompts & Mascot Processing State**
   Becomes usable: After diagnostics appear, the user can toggle structured cleaning actions (removing empty rows, trimming whitespace, standardizing headers) and type optional notes into a custom instruction prompt. Clicking "Clean Data" triggers the animated cartoon mascot processing state.
   Why now: Puts the user in the evaluator seat with concrete cleaning decisions and gives immediate reassuring feedback during processing before running transformations.
   PRD ref: `prd.md > Features and Behavior (3. Interactive Cleaning Prompts & Custom Instructions, 4. Mascot Processing State)`
@@ -51,7 +51,7 @@ Build mode: fast
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — Slice 2 (File scan, diagnostics & interactive controls ready)
+- [x] Early usable behavior explored — Slice 2 (File scan, diagnostics & interactive controls ready)
 - [ ] Final kick-the-tires exploration and feedback completed — Slice 4 (Full loop from upload to audit log and download)
 
 ## Final Review
@@ -71,3 +71,5 @@ Reflection:
 Activity mode: 
 
 ## Revisions
+
+- Enhanced visual warmth, mascot character sizing, and added a minimum 1.8s duration to the cleaning mascot animation — learner feedback noted layout felt too minimalist/monochrome, mascot was small, and cleaning animation finished too quickly to see.
