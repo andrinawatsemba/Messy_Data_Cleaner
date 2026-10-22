@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messy Data Cleaner — App Map</title>
+  <style>
+    :root {
+      --cream: #f6f1e5;
+      --grid:  #d3c6ae;
+      --wood:  #8b5e3c;
+      --spruce: #2c5842;
+      --ink:   #2a2218;
+      --muted: #9e8c78;
+      --sponge: #f5a623;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.65;
+      padding: 2rem 1.5rem 4rem;
+      /* subtle graph-paper lines */
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .page { max-width: 780px; margin: 0 auto; }
+
+    h1 { font-size: 1.9rem; color: var(--wood); margin-bottom: .25rem; }
+    h2 { font-size: 1.15rem; color: var(--spruce); margin: 2rem 0 .6rem; border-bottom: 2px solid var(--grid); padding-bottom: .3rem; }
+    h3 { font-size: .95rem; color: var(--wood); margin: 1.2rem 0 .3rem; }
+    p  { margin-bottom: .8rem; }
+    ul { padding-left: 1.4rem; margin-bottom: .8rem; }
+    li { margin-bottom: .35rem; }
+
+    .badge {
+      display: inline-block; padding: .15rem .55rem;
+      border: 1.5px solid var(--wood); border-radius: 999px;
+      font-size: .75rem; color: var(--wood); font-family: monospace;
+      background: #fff8ee; margin-right: .3rem;
+    }
+    .card {
+      background: #fffdf7;
+      border: 1.5px solid var(--grid);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 2px 3px 0 var(--grid);
+    }
+    code {
+      font-family: 'Courier New', monospace;
+      background: #ede8de;
+      padding: .1rem .35rem;
+      border-radius: 4px;
+      font-size: .85em;
+    }
+    pre {
+      background: #ede8de;
+      border: 1px solid var(--grid);
+      border-radius: 6px;
+      padding: .85rem 1rem;
+      overflow-x: auto;
+      font-size: .82rem;
+      line-height: 1.5;
+      margin-bottom: .8rem;
+    }
+    details { margin-bottom: .7rem; }
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--spruce);
+      padding: .4rem .6rem;
+      background: #eee9dc;
+      border-radius: 6px;
+      user-select: none;
+      list-style: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶ "; font-size: .75rem; color: var(--muted); }
+    details[open] summary::before { content: "▼ "; }
+    details > *:not(summary) { padding: .6rem .6rem 0; }
+
+    /* ── Flow diagram ────────────────────────────────────────────── */
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .5rem;
+      margin: 1rem 0;
+    }
+    .node {
+      background: #fffdf7;
+      border: 2px solid var(--grid);
+      border-radius: 8px;
+      padding: .55rem .9rem;
+      font-size: .82rem;
+      text-align: center;
+      min-width: 110px;
+    }
+    .node.fe  { border-color: var(--sponge); background: #fffbf0; }
+    .node.be  { border-color: var(--spruce); background: #f0f6f2; }
+    .node.ext { border-color: var(--wood);   background: #fef8f0; }
+    .node .label { font-family: monospace; font-size: .72rem; color: var(--muted); display: block; margin-top: .15rem; }
+    .arrow { color: var(--muted); font-size: 1.2rem; align-self: center; }
+    .legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .78rem; margin-top: .5rem; }
+    .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: .3rem; vertical-align: middle; }
+
+    .route-stop {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: flex-start;
+    }
+    .stop-num {
+      flex-shrink: 0;
+      width: 2rem; height: 2rem;
+      background: var(--spruce);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; font-weight: bold;
+      margin-top: .1rem;
+    }
+    .stop-body { flex: 1; }
+    .stop-body strong { color: var(--spruce); }
+
+    .pointer-row { display: flex; gap: .6rem; align-items: baseline; margin-bottom: .45rem; }
+    .pointer-row code { min-width: 0; }
+    .pointer-label { color: var(--muted); font-size: .82rem; }
+
+    .commit-box {
+      display: inline-block;
+      font-family: monospace;
+      font-size: .8rem;
+      background: #ede8de;
+      border: 1px solid var(--grid);
+      border-radius: 6px;
+      padding: .2rem .6rem;
+      color: var(--ink);
+    }
+    .run-cmd {
+      font-family: monospace;
+      font-size: .82rem;
+      background: #1e1a14;
+      color: #d4c5a0;
+      border-radius: 6px;
+      padding: .75rem 1rem;
+      display: block;
+      margin: .4rem 0 .8rem;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .practice-box {
+      border-left: 4px solid var(--sponge);
+      background: #fffbf0;
+      padding: .8rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: .8rem;
+    }
+    .snapshot-note {
+      font-size: .78rem; color: var(--muted); border-top: 1px solid var(--grid);
+      margin-top: 2rem; padding-top: .75rem;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <h1>Messy Data Cleaner</h1>
+  <p style="color:var(--muted); font-size:.9rem; margin-bottom:1.5rem;">
+    App Map &mdash; Devpost Build With AI Basics &bull; Proof-of-Concept
+  </p>
+
+  <!-- ── OVERVIEW ─────────────────────────────────────────────────── -->
+  <h2>What This App Does</h2>
+  <div class="card">
+    <p>A user drops a messy Excel file onto the page. The Python backend scans it and returns diagnostics.
+    The user picks cleaning rules, then clicks <strong>Clean My Spreadsheet</strong>.
+    While the cleaning mascot animates (at least 3.5 s), the backend runs pandas transformations.
+    When done, the frontend shows a before/after summary, an enriched audit log (per rule: cells changed + examples),
+    and a download button for the cleaned <code>.xlsx</code>.</p>
+    <p>Everything runs <strong>locally</strong> — no user accounts, no cloud storage.
+    The file is processed in memory and never written to disk.</p>
+  </div>
+
+  <!-- ── FLOW DIAGRAM ──────────────────────────────────────────────── -->
+  <h2>How the Pieces Connect</h2>
+
+  <div class="card">
+    <div class="flow">
+      <div class="node fe">Browser<span class="label">React + Vite :5173</span></div>
+      <div class="arrow">⟷</div>
+      <div class="node fe">App.jsx<span class="label">state coordinator</span></div>
+      <div class="arrow">POST /api/scan<br/>POST /api/clean</div>
+      <div class="node be">FastAPI<span class="label">main.py :8000</span></div>
+      <div class="arrow">→</div>
+      <div class="node be">cleaner.py<span class="label">pandas engine</span></div>
+    </div>
+    <div class="flow" style="margin-top:.2rem;">
+      <div style="width:110px"></div>
+      <div class="arrow" style="visibility:hidden">⟷</div>
+      <div class="node be" style="opacity:.85">gemini_helper.py<span class="label">optional AI prompt</span></div>
+      <div class="arrow">→ fallback if no key</div>
+    </div>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#f5a623; border:1.5px solid #f5a623;"></span>Frontend (React)</span>
+      <span><span class="legend-dot" style="background:#2c5842; border:1.5px solid #2c5842;"></span>Backend (FastAPI + pandas)</span>
+    </div>
+  </div>
+
+  <!-- ── 2-STOP CODE ROUTE ─────────────────────────────────────────── -->
+  <h2>Reference Route — Follow "Clean My Spreadsheet"</h2>
+  <p style="font-size:.85rem; color:var(--muted); margin-bottom:.8rem;">
+    This is a reference route built from the finished code. It was not walked through interactively.
+  </p>
+
+  <div class="route-stop">
+    <div class="stop-num">1</div>
+    <div class="stop-body">
+      <strong>Entry point — <code>frontend/src/App.jsx</code></strong>, <code>handleClean</code><br/>
+      When the user clicks the button, <code>handleClean</code> builds a <code>FormData</code> object with the file,
+      the selected options (as JSON), and any custom instruction. It fires two things in parallel with
+      <code>Promise.all</code>: the real <code>POST /api/clean</code> fetch <em>and</em> a 3.5 s timer —
+      so the mascot always plays fully before results appear.
+      <details>
+        <summary>See the relevant lines</summary>
+<pre>
+// App.jsx  ⟶  handleClean
+const minAnimationDelay = new Promise((r) =&gt; setTimeout(r, 3500));
+const [response] = await Promise.all([
+  fetch('/api/clean', { method: 'POST', body: formData }),
+  minAnimationDelay,
+]);
+setResults(data);   // triggers AuditLogResults to appear
+</pre>
+      </details>
+    </div>
+  </div>
+
+  <div class="route-stop">
+    <div class="stop-num">2</div>
+    <div class="stop-body">
+      <strong>Logic — <code>backend/cleaner.py</code></strong>, <code>clean_excel</code><br/>
+      The function receives the raw file bytes, runs up to six pandas transformations in order
+      (duplicates → empty rows → empty cols → headers → whitespace → fill numbers),
+      and builds two lists: <code>what_changed</code> (enriched dicts with rule name, cell count, examples)
+      and <code>what_didnt_change</code> (plain strings). The cleaned dataframe is
+      serialised back to <code>.xlsx</code> bytes and base64-encoded for transport.
+      <details>
+        <summary>See the return shape</summary>
+<pre>
+return {
+  "status": "success",
+  "original_rows": ..., "new_rows": ...,
+  "duplicate_rows_removed": ...,
+  "missing_cells_before": ..., "missing_cells_after": ...,
+  "what_changed": [           # ← list of dicts
+      { "rule": "...", "summary": "...",
+        "cells_changed": N, "examples": [...] }
+  ],
+  "what_didnt_change": [...], # ← list of strings
+  "file_base64": "..."        # ← the cleaned .xlsx
+}
+</pre>
+      </details>
+    </div>
+  </div>
+
+  <div class="route-stop">
+    <div class="stop-num">3</div>
+    <div class="stop-body">
+      <strong>Result — <code>frontend/src/components/AuditLogResults.jsx</code></strong><br/>
+      Once <code>App.jsx</code> sets <code>results</code>, <code>AuditLogResults</code> renders the
+      before/after summary bar (rows in → duplicates removed → rows out → missing flags),
+      then one card per rule in <code>what_changed</code> with an inline example table.
+      The download button calls back to <code>handleDownload</code> in <code>App.jsx</code>,
+      which decodes the base64 string and creates a temporary <code>&lt;a&gt;</code> element to trigger the browser download.
+    </div>
+  </div>
+
+  <!-- ── TO CHANGE THIS, START HERE ──────────────────────────────── -->
+  <h2>"To Change This, Start Here"</h2>
+  <div class="card">
+    <div class="pointer-row">
+      <code>backend/cleaner.py</code>
+      <span class="pointer-label">→ Add or tweak a cleaning rule (e.g. drop columns with &gt;80 % missing).</span>
+    </div>
+    <div class="pointer-row">
+      <code>frontend/src/App.jsx</code> &mdash; <code>handleClean</code>
+      <span class="pointer-label">→ Change the minimum mascot display time (look for the <code>3500</code> ms literal).</span>
+    </div>
+    <div class="pointer-row">
+      <code>frontend/src/components/AuditLogResults.jsx</code>
+      <span class="pointer-label">→ Add, remove, or reorder summary stat cards; tweak example table columns.</span>
+    </div>
+    <div class="pointer-row">
+      <code>frontend/src/index.css</code>
+      <span class="pointer-label">→ Change the cream background colour (<code>#f6f1e5</code>), grid lines (<code>#d3c6ae</code>), or animation keyframes.</span>
+    </div>
+    <div class="pointer-row">
+      <code>backend/gemini_helper.py</code>
+      <span class="pointer-label">→ Change how the custom instruction text is sent to Gemini, or swap in a different model.</span>
+    </div>
+    <div class="pointer-row">
+      <code>tailwind.config.js</code>
+      <span class="pointer-label">→ Rename or add palette colours (parchment, wood, spruce, …) used throughout the UI.</span>
+    </div>
+  </div>
+
+  <!-- ── RUN THE APP ───────────────────────────────────────────────── -->
+  <h2>How to Run It Again</h2>
+  <div class="card">
+    <h3>Backend (from project root)</h3>
+    <span class="run-cmd">.\backend\venv\Scripts\python -m uvicorn main:app --app-dir backend --port 8000 --reload</span>
+
+    <h3>Frontend (new terminal, from project root)</h3>
+    <span class="run-cmd">cd frontend
+npm run dev</span>
+
+    <p>Then open <code>http://localhost:5173</code> in your browser.
+    The frontend proxies <code>/api/*</code> to <code>:8000</code> automatically (configured in <code>frontend/vite.config.js</code>).</p>
+
+    <h3>Run backend tests</h3>
+    <span class="run-cmd">.\backend\venv\Scripts\python -m pytest backend/test_api.py -v</span>
+  </div>
+
+  <!-- ── PRACTICE TO REUSE ─────────────────────────────────────────── -->
+  <h2>A Practice to Reuse</h2>
+  <div class="practice-box">
+    <p><strong>Parallel fetch + timer &rarr; predictable UX.</strong></p>
+    <p>
+      In <code>App.jsx handleClean</code>, the API call and a fixed timer run side-by-side with
+      <code>Promise.all</code>. The UI only advances when <em>both</em> finish — so the mascot always
+      plays for its full 3.5 s, no matter how fast the backend responds.
+    </p>
+    <p>
+      The pattern — <em>pair a real async task with a minimum-wait promise</em> — is reusable any time
+      you want a loading state to feel intentional rather than flickering.
+      It requires no extra library; just <code>Promise.all([realFetch, minDelay])</code>.
+    </p>
+  </div>
+
+  <!-- ── SNAPSHOT NOTE ─────────────────────────────────────────────── -->
+  <div class="snapshot-note">
+    <p>
+      <strong>Snapshot commit:</strong>
+      <span class="commit-box">64a10d5 — "Add before/after summary, enrich change log with per-rule cell counts and examples, defer flag-and-decide to PRD"</span>
+    </p>
+    <p>This map reflects the code at that commit. If you change the app after shipping, the map may drift — regenerate it when the architecture changes.</p>
+  </div>
+
+</div>
+</body>
+</html>

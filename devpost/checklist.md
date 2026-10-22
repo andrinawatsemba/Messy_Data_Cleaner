@@ -52,7 +52,7 @@ Build mode: fast
 ## Hands-on Checkpoints
 
 - [x] Early usable behavior explored — Slice 2 (File scan, diagnostics & interactive controls ready)
-- [ ] Final kick-the-tires exploration and feedback completed — Slice 4 (Full loop from upload to audit log and download)
+- [x] Final kick-the-tires exploration and feedback completed — Slice 4 (Full loop from upload to audit log and download)
 
 ## Final Review
 
@@ -61,22 +61,22 @@ Build mode: fast
 - [x] Update background to warm cream parchment with more visible graph grid lines
 - [x] Extend cleaning mascot animation duration to ~3.5s so it is clearly enjoyed
 - [x] Blend warm library/parchment aesthetic into card borders and accents for a soulful feel
-- [ ] Add before/after summary (rows in, duplicates removed, rows out, missing values flagged)
-- [ ] Enrich change log: per rule, show cells changed count + 2-3 before/after value examples
-- [ ] Note flag-and-decide outlier/date screen as deferred in prd.md
-- [ ] Final review complete — feedback resolved and learner confirms ready to ship
+- [x] Add before/after summary (rows in, duplicates removed, rows out, missing values flagged)
+- [x] Enrich change log: per rule, show cells changed count + 2-3 before/after value examples
+- [x] Note flag-and-decide outlier/date screen as deferred in prd.md
+- [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence: 
-Route and stops: 
-Edit outcome: 
-Reflection: 
-Activity mode: 
+Activity and evidence: Reference route built from finished code; practice grounded in Promise.all parallel fetch+timer pattern (App.jsx handleClean).
+Route and stops: (1) App.jsx handleClean → (2) backend/cleaner.py clean_excel → (3) AuditLogResults.jsx
+Edit outcome: Not applicable — reference route (not interactive walkthrough); learner can try the 3500ms tweak independently via app-map pointer.
+Reflection: Offered via app-map "A Practice to Reuse" section.
+Activity mode: Reference route (static map)
 
 ## Revisions
 
