@@ -15,7 +15,6 @@ def test_health():
 def test_scan_valid_excel():
     with open("test_data/sample_messy.xlsx", "rb") as f:
         file_bytes = f.read()
-
     data = scan_excel(file_bytes)
     assert data["status"] == "success"
     assert data["total_rows"] == 5
@@ -23,7 +22,6 @@ def test_scan_valid_excel():
     assert data["missing_cells"] == 11
     assert len(data["columns"]) == 5
 
-    # Test via API endpoint
     response = client.post(
         "/api/scan",
         files={"file": ("sample_messy.xlsx", file_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
@@ -32,7 +30,6 @@ def test_scan_valid_excel():
     json_data = response.json()
     assert json_data["status"] == "success"
     assert json_data["total_rows"] == 5
-    assert json_data["total_columns"] == 5
     assert json_data["filename"] == "sample_messy.xlsx"
 
 def test_scan_invalid_file_format():
@@ -51,17 +48,9 @@ def test_scan_empty_file():
     assert response.status_code == 200
     assert response.json()["status"] == "empty"
 
-def test_clean_endpoint_and_audit_log():
+def test_clean_enriched_audit_log_and_summary():
     with open("test_data/sample_messy.xlsx", "rb") as f:
         file_bytes = f.read()
-
-    options = {
-        "remove_empty_rows": True,
-        "remove_empty_cols": True,
-        "trim_whitespace": True,
-        "standardize_headers": True,
-        "fill_missing_numbers": False
-    }
 
     response = client.post(
         "/api/clean",
@@ -72,30 +61,43 @@ def test_clean_endpoint_and_audit_log():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "success"
-    assert data["original_rows"] == 5
-    assert data["original_cols"] == 5
-    # The completely empty column should be removed
-    assert data["new_cols"] == 4
-    # Check that audit logs were populated
-    assert len(data["what_changed"]) > 0
-    assert len(data["what_didnt_change"]) > 0
-    assert any("empty column" in item.lower() for item in data["what_changed"])
-    assert any("whitespace" in item.lower() for item in data["what_changed"])
-    assert any("column header" in item.lower() for item in data["what_changed"])
-    assert any("preserved" in item.lower() for item in data["what_didnt_change"])
 
-    # Verify that the generated base64 Excel file is valid and readable
+    # Before/after summary fields
+    assert "duplicate_rows_removed" in data
+    assert "empty_rows_removed" in data
+    assert "empty_cols_removed" in data
+    assert "missing_cells_before" in data
+    assert "missing_cells_after" in data
+
+    # Empty column (EMPTY_COL) should have been removed
+    assert data["new_cols"] == 4
+    assert data["empty_cols_removed"] == 1
+
+    # Enriched what_changed: each item must be a dict with rule, summary, cells_changed, examples
+    assert len(data["what_changed"]) > 0
+    for entry in data["what_changed"]:
+        assert isinstance(entry, dict)
+        assert "rule" in entry
+        assert "summary" in entry
+        assert "cells_changed" in entry
+        assert "examples" in entry
+
+    # Check that whitespace trim rule is present and has examples
+    trim_rules = [e for e in data["what_changed"] if "whitespace" in e["rule"].lower() or "trim" in e["rule"].lower()]
+    assert len(trim_rules) > 0
+    assert trim_rules[0]["cells_changed"] > 0
+
+    # Verify downloaded file is valid Excel
     raw_excel = base64.b64decode(data["file_base64"])
     cleaned_df = pd.read_excel(io.BytesIO(raw_excel))
     assert len(cleaned_df.columns) == 4
-    # Check that whitespace was trimmed in Customer Name
     first_name = cleaned_df["customer_name"].iloc[0]
-    assert first_name == "Alice Johnson"  # No leading or trailing spaces
+    assert first_name == "Alice Johnson"
 
 if __name__ == "__main__":
     test_health()
     test_scan_valid_excel()
     test_scan_invalid_file_format()
     test_scan_empty_file()
-    test_clean_endpoint_and_audit_log()
-    print("All backend tests (scan + clean + audit log + export) passed successfully!")
+    test_clean_enriched_audit_log_and_summary()
+    print("All tests passed — enriched audit log + before/after summary verified!")

@@ -161,6 +161,7 @@ Source: `scope.md > The POC Boundary`
 - **Multi-File Formats (CSV, JSON, Google Sheets)**: Deferred until Excel cleaning is proven.
 - **User Accounts & Cloud Storage**: No logins or saved cloud history; PoC is local and ephemeral.
 - **Full Animated Story Mascot**: Rich character animation sequences (e.g., sweeping broom physics) deferred; PoC uses subtle character illustrations.
+- **Flag-and-Decide Screen for Outliers & Ambiguous Dates**: Detecting statistical outliers and ambiguous date formats (e.g., 01/02/2024 as Jan 2nd vs Feb 1st) and surfacing them for human review before applying any fix adds a new interactive stage to the core loop. Deferred — the PoC auto-skips these values and notes them in the "What Didn't Change" log rather than guessing. The full review-then-fix flow is the right next feature after the core cleaning loop is proven.
 
 ## Possible Later Enhancements
 

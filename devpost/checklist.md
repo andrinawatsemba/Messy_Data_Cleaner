@@ -56,11 +56,14 @@ Build mode: fast
 
 ## Final Review
 
-- [ ] Remove yellow wavy underline from header title
-- [ ] Remove emoji from 'The human-in-the-loop spreadsheet cleaner' badge
-- [ ] Update background to warm cream parchment with more visible graph grid lines
-- [ ] Extend cleaning mascot animation duration to ~3.5s so it is clearly enjoyed
-- [ ] Blend warm library/parchment aesthetic into card borders and accents for a soulful feel
+- [x] Remove yellow wavy underline from header title
+- [x] Remove emoji from 'The human-in-the-loop spreadsheet cleaner' badge
+- [x] Update background to warm cream parchment with more visible graph grid lines
+- [x] Extend cleaning mascot animation duration to ~3.5s so it is clearly enjoyed
+- [x] Blend warm library/parchment aesthetic into card borders and accents for a soulful feel
+- [ ] Add before/after summary (rows in, duplicates removed, rows out, missing values flagged)
+- [ ] Enrich change log: per rule, show cells changed count + 2-3 before/after value examples
+- [ ] Note flag-and-decide outlier/date screen as deferred in prd.md
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
