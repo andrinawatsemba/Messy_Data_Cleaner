@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messy Data Cleaner — Technical Specification</title>
+  <style>
+    :root {
+      --tile-bg: #eef3f0;
+      --tile-line: #d8e3dc;
+      --paper: #ffffff;
+      --card-bg: #fbfdfc;
+      --ink: #1a2923;
+      --muted: #596f64;
+      --border: #d4e0d9;
+      --accent-mint: #2e7d58;
+      --accent-blue: #3b82a6;
+      --accent-yellow: #f59e0b;
+      --accent-pink: #d9466f;
+      --accent-clean: #10b981;
+      --tag-bg: #e3ede7;
+      --shadow: 0 4px 16px rgba(26, 41, 35, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--tile-bg);
+      background-image: 
+        linear-gradient(var(--tile-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--tile-line) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--ink);
+      line-height: 1.6;
+      padding-bottom: 4rem;
+    }
+
+    header {
+      max-width: 60rem;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 1.5rem;
+    }
+
+    .badge-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: var(--tag-bg);
+      color: var(--muted);
+    }
+
+    .badge.status {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    h1 {
+      font-size: 2.35rem;
+      line-height: 1.2;
+      margin: 0.25rem 0 0.5rem;
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .tagline {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 48rem;
+      margin: 0;
+    }
+
+    main {
+      max-width: 60rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin: 0 0 1rem;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: -0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Diagram Styles */
+    .diagram-box {
+      width: 100%;
+      overflow-x: auto;
+      background: #fafcfb;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+    }
+
+    .diagram-box svg {
+      width: 100%;
+      min-width: 820px;
+      height: auto;
+      display: block;
+    }
+
+    /* Stack Grid */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .stack-card {
+      background: #fbfdfc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .stack-role {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .stack-tech {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stack-desc {
+      font-size: 0.88rem;
+      color: #4b5563;
+      margin-top: 0.5rem;
+    }
+
+    /* Interactive Component Revealer */
+    .comp-selector {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .comp-btn {
+      background: #f0f5f2;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .comp-btn:hover {
+      background: #e4eee8;
+      color: var(--ink);
+    }
+
+    .comp-btn.active {
+      background: var(--accent-mint);
+      color: #ffffff;
+      border-color: var(--accent-mint);
+    }
+
+    .comp-panel {
+      display: none;
+      background: #f8faf9;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .comp-panel.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .code-tree {
+      background: #1e2923;
+      color: #e2ede6;
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      overflow-x: auto;
+    }
+
+    .callout {
+      border-left: 4px solid var(--accent-mint);
+      background: #f2f8f5;
+      padding: 1rem 1.25rem;
+      border-radius: 0 10px 10px 0;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+
+    .api-endpoint {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 0.75rem 0;
+      font-family: monospace;
+      font-size: 0.88rem;
+    }
+
+    .pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+    }
+    .pill.post { background: #dbeafe; color: #1e40af; }
+    .pill.res { background: #dcfce7; color: #15803d; }
+
+    footer {
+      max-width: 60rem;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge-bar">
+      <span class="badge">Devpost Hackathon</span>
+      <span class="badge">Technical Specification</span>
+      <span class="badge status" style="background: #d1fae5; color: #065f46; border-color: #a7f3d0;">Status: Approved</span>
+    </div>
+    <h1>Messy Data Cleaner — Blueprint</h1>
+    <p class="tagline">
+      Technical architecture: React (Vite) frontend + FastAPI (Python + pandas) backend with Google Gemini AI for smart instructions.
+    </p>
+  </header>
+
+  <main>
+
+    <!-- Plain Language Summary -->
+    <section class="card">
+      <h2>💡 How This Works, In Plain Language</h2>
+      <p class="section-desc">A clean division of responsibilities designed for high trust, rapid development, and easy demo recording.</p>
+      
+      <div class="callout">
+        <strong>The Big Picture:</strong> The <strong>React frontend</strong> gives you an interactive, animated single-page surface (with file drag-and-drop, diagnostic counters, and mascot state). The <strong>FastAPI backend</strong> runs locally in Python, reading the Excel file with <strong>pandas</strong>, executing cleaning operations, calling <strong>Google Gemini API</strong> for custom instructions, and returning a detailed "What Changed & What Didn't" audit log.
+      </div>
+
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="stack-role">Frontend UI</div>
+          <div class="stack-tech">⚛️ React 18 + Vite</div>
+          <div class="stack-desc">Single-page application with stage-based state, custom drag-and-drop, and cleaning controls.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-role">Backend Engine</div>
+          <div class="stack-tech">⚡ FastAPI (Python)</div>
+          <div class="stack-desc">Asynchronous Python API handling file uploads, validation, and streaming clean exports.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-role">Data Processing</div>
+          <div class="stack-tech">🐼 pandas + openpyxl</div>
+          <div class="stack-desc">Fast, deterministic spreadsheet manipulation: whitespace stripping, row/col cleanup, audit diffing.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-role">Smart Prompts</div>
+          <div class="stack-tech">✨ Google Gemini API</div>
+          <div class="stack-desc">Interprets optional plain-English custom instructions into pandas code with audit notes (free tier).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- System Architecture Diagram -->
+    <section class="card">
+      <h2>📐 System Architecture & Data Flow</h2>
+      <p class="section-desc">Trace how a messy Excel spreadsheet travels from browser upload to clean export.</p>
+      
+      <div class="diagram-box">
+        <svg viewBox="0 0 880 280" xmlns="http://www.w3.org/2000/svg">
+          <!-- Boundaries -->
+          <rect x="20" y="20" width="360" height="240" rx="14" fill="#f8faf9" stroke="#94a3b8" stroke-dasharray="4" stroke-width="1.5" />
+          <text x="40" y="45" font-family="sans-serif" font-size="12" font-weight="bold" fill="#596f64">FRONTEND (Browser • Port 5173)</text>
+
+          <rect x="500" y="20" width="360" height="240" rx="14" fill="#f0f7f4" stroke="#2e7d58" stroke-dasharray="4" stroke-width="1.5" />
+          <text x="520" y="45" font-family="sans-serif" font-size="12" font-weight="bold" fill="#2e7d58">BACKEND (FastAPI • Port 8000)</text>
+
+          <!-- Frontend components -->
+          <rect x="40" y="65" width="320" height="40" rx="8" fill="#ffffff" stroke="#cbd5e1" />
+          <text x="60" y="90" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923">DropZone.jsx (Validates .xlsx/.xls)</text>
+
+          <rect x="40" y="115" width="320" height="40" rx="8" fill="#ffffff" stroke="#cbd5e1" />
+          <text x="60" y="140" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923">DiagnosticsPanel.jsx & Controls.jsx</text>
+
+          <rect x="40" y="165" width="320" height="40" rx="8" fill="#ffffff" stroke="#cbd5e1" />
+          <text x="60" y="190" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923">MascotLoader.jsx (Processing state)</text>
+
+          <rect x="40" y="215" width="320" height="35" rx="8" fill="#ffffff" stroke="#cbd5e1" />
+          <text x="60" y="238" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">AuditLogResults.jsx (Download .xlsx)</text>
+
+          <!-- Middle Connectors -->
+          <!-- Scan call -->
+          <line x1="360" y1="85" x2="520" y2="85" stroke="#3b82a6" stroke-width="2" />
+          <polygon points="520,80 530,85 520,90" fill="#3b82a6" />
+          <text x="445" y="78" font-family="sans-serif" font-size="10" font-weight="bold" fill="#3b82a6" text-anchor="middle">POST /api/scan</text>
+
+          <!-- Scan return -->
+          <line x1="520" y1="125" x2="360" y2="125" stroke="#3b82a6" stroke-width="2" stroke-dasharray="3" />
+          <polygon points="360,120 350,125 360,130" fill="#3b82a6" />
+          <text x="445" y="118" font-family="sans-serif" font-size="10" font-weight="bold" fill="#3b82a6" text-anchor="middle">JSON Stats</text>
+
+          <!-- Clean call -->
+          <line x1="360" y1="185" x2="520" y2="185" stroke="#2e7d58" stroke-width="2" />
+          <polygon points="520,180 530,185 520,190" fill="#2e7d58" />
+          <text x="445" y="178" font-family="sans-serif" font-size="10" font-weight="bold" fill="#2e7d58" text-anchor="middle">POST /api/clean</text>
+
+          <!-- Clean return -->
+          <line x1="520" y1="230" x2="360" y2="230" stroke="#10b981" stroke-width="2" stroke-dasharray="3" />
+          <polygon points="360,225 350,230 360,235" fill="#10b981" />
+          <text x="445" y="224" font-family="sans-serif" font-size="10" font-weight="bold" fill="#10b981" text-anchor="middle">Audit Log + File</text>
+
+          <!-- Backend Modules -->
+          <rect x="520" y="65" width="320" height="40" rx="8" fill="#ffffff" stroke="#2e7d58" />
+          <text x="540" y="90" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923">main.py (FastAPI Routes & CORS)</text>
+
+          <rect x="520" y="115" width="320" height="55" rx="8" fill="#ffffff" stroke="#2e7d58" />
+          <text x="540" y="137" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923">cleaner.py (pandas + openpyxl)</text>
+          <text x="540" y="155" font-family="sans-serif" font-size="10" fill="#64748b">Inspects nulls, trims text, generates diff log</text>
+
+          <rect x="520" y="180" width="320" height="55" rx="8" fill="#ffffff" stroke="#f59e0b" />
+          <text x="540" y="202" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923">gemini_helper.py (Google Gemini API)</text>
+          <text x="540" y="220" font-family="sans-serif" font-size="10" fill="#64748b">Translates free-text prompts to safe pandas code</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Component Directory & Responsibilities -->
+    <section class="card">
+      <h2>🧩 Component Directory</h2>
+      <p class="section-desc">Click each piece to see its file path, responsibilities, and PRD mapping.</p>
+
+      <div class="comp-selector">
+        <button class="comp-btn active" onclick="showComp('dropzone', this)">DropZone.jsx</button>
+        <button class="comp-btn" onclick="showComp('diagnostics', this)">DiagnosticsPanel.jsx</button>
+        <button class="comp-btn" onclick="showComp('controls', this)">CleaningControls.jsx</button>
+        <button class="comp-btn" onclick="showComp('mascot', this)">MascotLoader.jsx</button>
+        <button class="comp-btn" onclick="showComp('results', this)">AuditLogResults.jsx</button>
+        <button class="comp-btn" onclick="showComp('cleaner', this)">cleaner.py</button>
+        <button class="comp-btn" onclick="showComp('gemini', this)">gemini_helper.py</button>
+      </div>
+
+      <div id="comp-dropzone" class="comp-panel active">
+        <h4><code>frontend/src/components/DropZone.jsx</code></h4>
+        <p><strong>Role:</strong> Drag-and-drop file target. Checks file extension (<code>.xlsx</code>, <code>.xls</code>). If invalid, triggers polite inline alert without network call. Implements <code>prd.md > Features and Behavior (1. Excel File Ingestion & Validation)</code>.</p>
+      </div>
+
+      <div id="comp-diagnostics" class="comp-panel">
+        <h4><code>frontend/src/components/DiagnosticsPanel.jsx</code></h4>
+        <p><strong>Role:</strong> Renders diagnostic cards showing total rows, columns, and missing cells count/percentage. Implements <code>prd.md > Features and Behavior (2. Workbook Breakdown & Diagnostic Summary)</code>.</p>
+      </div>
+
+      <div id="comp-controls" class="comp-panel">
+        <h4><code>frontend/src/components/CleaningControls.jsx</code></h4>
+        <p><strong>Role:</strong> Interactive checkboxes for cleaning actions (remove empty rows, trim whitespace, standardize headers) and free-text custom instruction input. Implements <code>prd.md > Features and Behavior (3. Interactive Cleaning Prompts)</code>.</p>
+      </div>
+
+      <div id="comp-mascot" class="comp-panel">
+        <h4><code>frontend/src/components/MascotLoader.jsx</code></h4>
+        <p><strong>Role:</strong> Active cartoon mascot visual with progress copy (<em>"Tidying up your rows and sweeping nulls..."</em>) displayed during API execution. Implements <code>prd.md > Features and Behavior (4. Mascot Processing State)</code>.</p>
+      </div>
+
+      <div id="comp-results" class="comp-panel">
+        <h4><code>frontend/src/components/AuditLogResults.jsx</code></h4>
+        <p><strong>Role:</strong> Displays the "What Changed & What Didn't" audit lists and one-click "Download Cleaned File" button. Implements <code>prd.md > Features and Behavior (5. Audit Log, 6. Clean File Export)</code>.</p>
+      </div>
+
+      <div id="comp-cleaner" class="comp-panel">
+        <h4><code>backend/cleaner.py</code></h4>
+        <p><strong>Role:</strong> Core Python pandas engine. Parses Excel buffer into DataFrame, runs selected cleaning routines, records audit log arrays, and outputs tidied Excel byte stream.</p>
+      </div>
+
+      <div id="comp-gemini" class="comp-panel">
+        <h4><code>backend/gemini_helper.py</code></h4>
+        <p><strong>Role:</strong> Calls Google Gemini API (<code>gemini-1.5-flash</code>) to interpret custom text instructions into safe transformations. Graceful fallback if no key is set.</p>
+      </div>
+    </section>
+
+    <!-- File Structure -->
+    <section class="card">
+      <h2>📁 Project File Tree</h2>
+      <p class="section-desc">The planned repository layout for <code>5-build</code>.</p>
+      <div class="code-tree">DEV-Project/
+├── backend/
+│   ├── main.py              # FastAPI app & endpoint routing
+│   ├── cleaner.py           # Core pandas Excel parsing & cleaning pipeline
+│   ├── gemini_helper.py     # Gemini API integration for custom prompts
+│   ├── requirements.txt     # fastapi, uvicorn, pandas, openpyxl, google-genai
+│   └── .env.example         # GEMINI_API_KEY template
+├── frontend/
+│   ├── index.html           # HTML root with retro tile grid styles
+│   ├── package.json         # React 18, Vite, Tailwind CSS
+│   ├── vite.config.js       # Vite config with backend proxy
+│   ├── tailwind.config.js   # Mint tile & pastel cleaning palette
+│   └── src/
+│       ├── App.jsx          # Stage coordinator & session state
+│       ├── components/      # UI components (Header, DropZone, etc.)
+│       └── assets/          # Mascot SVG illustration
+└── devpost/                 # Hackathon planning workspace</div>
+    </section>
+
+    <!-- API Contracts -->
+    <section class="card">
+      <h2>🔌 API Endpoints & Contracts</h2>
+      <p class="section-desc">Exact contracts between React and FastAPI.</p>
+
+      <div class="api-endpoint">
+        <span class="pill post">POST</span> <code>/api/scan</code>
+        <p style="margin: 0.5rem 0 0; color: #475569;">Takes uploaded Excel file, returns row/col/null counts.</p>
+      </div>
+
+      <div class="api-endpoint">
+        <span class="pill post">POST</span> <code>/api/clean</code>
+        <p style="margin: 0.5rem 0 0; color: #475569;">Takes file + options + optional prompt, returns audit log & cleaned file.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Messy Data Cleaner • Technical Specification • Devpost Build With AI Basics
+  </footer>
+
+  <script>
+    function showComp(compId, btn) {
+      document.querySelectorAll('.comp-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('comp-' + compId).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
