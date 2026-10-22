@@ -4,6 +4,7 @@ import DropZone from './components/DropZone';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
 import CleaningControls from './components/CleaningControls';
 import MascotLoader from './components/MascotLoader';
+import AuditLogResults from './components/AuditLogResults';
 
 export default function App() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -95,6 +96,33 @@ export default function App() {
     }
   };
 
+  const handleDownload = () => {
+    if (!results || !results.file_base64) return;
+
+    try {
+      const byteCharacters = atob(results.file_base64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = results.filename || 'cleaned_data.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      setErrorMessage('Failed to trigger file download: ' + err.message);
+    }
+  };
+
   const handleReset = () => {
     setSelectedFile(null);
     setDiagnostics(null);
@@ -109,7 +137,7 @@ export default function App() {
 
       <main className="mt-8 space-y-6">
         {errorMessage && (
-          <div className="p-4 bg-caddy-light border-2 border-caddy/30 rounded-2xl flex items-center justify-between text-caddy text-sm font-bold shadow-sm">
+          <div className="p-4 bg-caddy-light border-2 border-caddy/30 rounded-2xl flex items-center justify-between text-caddy text-sm font-bold shadow-sm animate-fadeIn">
             <span>{errorMessage}</span>
             <button
               onClick={() => setErrorMessage(null)}
@@ -120,11 +148,16 @@ export default function App() {
           </div>
         )}
 
-        {!diagnostics ? (
+        {/* Stage 1: Upload Zone */}
+        {!diagnostics && (
           <DropZone onFileSelect={handleFileSelect} isScanning={isScanning} />
-        ) : isCleaning ? (
-          <MascotLoader />
-        ) : (
+        )}
+
+        {/* Stage 2 & 3: Mascot Working State */}
+        {isCleaning && <MascotLoader />}
+
+        {/* Stage 2: Inspection & Cleaning Choices */}
+        {diagnostics && !results && !isCleaning && (
           <div className="space-y-6 animate-fadeIn">
             <DiagnosticsPanel diagnostics={diagnostics} onReset={handleReset} />
             <CleaningControls
@@ -136,6 +169,15 @@ export default function App() {
               isCleaning={isCleaning}
             />
           </div>
+        )}
+
+        {/* Stage 3 & 4: Audit Log & Export */}
+        {results && !isCleaning && (
+          <AuditLogResults
+            results={results}
+            onDownload={handleDownload}
+            onReset={handleReset}
+          />
         )}
       </main>
 
