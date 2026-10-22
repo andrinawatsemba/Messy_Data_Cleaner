@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messy Data Helper — Scope</title>
+  <style>
+    :root {
+      --paper: #f4efe6;
+      --ink: #1f2a24;
+      --muted: #5c6b63;
+      --rule: #d4c8b8;
+      --now: #2f6f4e;
+      --later: #b56b2a;
+      --cut: #8b3d3d;
+      --card: #fffaf3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Iowan Old Style", Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    header {
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 1rem;
+    }
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-family: "Segoe UI", sans-serif;
+    }
+    h1 { font-size: 2.2rem; margin: 0.35rem 0 0.5rem; }
+    .lede { font-size: 1.15rem; max-width: 40rem; }
+    main { max-width: 52rem; margin: 0 auto; padding: 0 1.5rem 4rem; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 1.25rem 1.4rem;
+      margin: 1rem 0;
+    }
+    h2 { margin: 0 0 0.6rem; font-size: 1.15rem; }
+    p { margin: 0.4rem 0; }
+    .diagram {
+      width: 100%;
+      overflow-x: auto;
+    }
+    .diagram svg { width: 100%; height: auto; display: block; }
+    .noscript-fallback { color: var(--muted); font-size: 0.95rem; }
+    .steps {
+      display: grid;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 2.2rem 1fr;
+      gap: 0.7rem;
+      align-items: start;
+    }
+    .n {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", sans-serif;
+      font-size: 0.85rem;
+    }
+    .tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+    .tabs button {
+      font-family: "Segoe UI", sans-serif;
+      border: 1px solid var(--rule);
+      background: transparent;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--ink);
+    }
+    .tabs button[aria-selected="true"] { color: #fff; }
+    .tabs button[data-panel="now"][aria-selected="true"] { background: var(--now); border-color: var(--now); }
+    .tabs button[data-panel="later"][aria-selected="true"] { background: var(--later); border-color: var(--later); }
+    .tabs button[data-panel="cut"][aria-selected="true"] { background: var(--cut); border-color: var(--cut); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    ul { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+    li { margin: 0.35rem 0; }
+    .kernel { border-left: 4px solid var(--now); }
+    footer { color: var(--muted); font-size: 0.85rem; font-family: "Segoe UI", sans-serif; }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="kicker">Scope · approved · proof of concept</p>
+    <h1>Messy Data Helper</h1>
+    <p class="lede">An app that takes a messy Excel file, shows what’s going on, asks before it changes things, then hands back a tidier file plus a log of what changed and what didn’t.</p>
+  </header>
+  <main>
+    <section class="kernel">
+      <h2>The unique kernel</h2>
+      <p><strong>Trust.</strong> Without questions before changes and a clear log of what was (and wasn’t) changed, people would not trust it enough to use. The human stays the evaluator so meaning isn’t lost and insights aren’t invented.</p>
+    </section>
+
+    <section>
+      <h2>Who it’s for</h2>
+      <p>Someone like you during the internship: a messy Excel file lands, hours or days go into cleaning it in Excel, then insights go to a supervisor. You want a first pass so you are not starting from a blank, terrifying spreadsheet — and you still need to catch mistakes that could distort decisions.</p>
+      <p>Other people in “data for decisions” work are a later hope, not the first person to design for.</p>
+    </section>
+
+    <section>
+      <h2>User, loop, and proof</h2>
+      <p class="noscript-fallback">Intern with a messy Excel file → breakdown and questions → optional instructions or a basic tidy → change log and download. The proof is that the log and questions make the file trustworthy enough to take.</p>
+      <div class="diagram" role="img" aria-label="The intern gives a messy Excel file to the helper. The helper shows a breakdown and asks before changing. The intern gets a tidier file plus a change log. That log is the proof of trust.">
+        <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="48" width="160" height="120" rx="12" fill="#e8f0ea" stroke="#1f2a24"/>
+          <text x="88" y="88" text-anchor="middle" font-size="14" font-family="Segoe UI, sans-serif">Intern</text>
+          <text x="88" y="112" text-anchor="middle" font-size="12" fill="#5c6b63" font-family="Georgia, serif">messy Excel</text>
+          <text x="88" y="132" text-anchor="middle" font-size="12" fill="#5c6b63" font-family="Georgia, serif">hours in a sheet</text>
+          <path d="M176 108 H248" stroke="#1f2a24" stroke-width="2" marker-end="url(#arrow)"/>
+          <rect x="252" y="28" width="216" height="164" rx="12" fill="#fffaf3" stroke="#1f2a24"/>
+          <text x="360" y="58" text-anchor="middle" font-size="14" font-family="Segoe UI, sans-serif">Core loop</text>
+          <text x="360" y="86" text-anchor="middle" font-size="12" font-family="Georgia, serif">1. Drop in the file</text>
+          <text x="360" y="108" text-anchor="middle" font-size="12" font-family="Georgia, serif">2. Rows, columns, missing</text>
+          <text x="360" y="130" text-anchor="middle" font-size="12" font-family="Georgia, serif">3. What to change — or skip</text>
+          <text x="360" y="152" text-anchor="middle" font-size="12" font-family="Georgia, serif">4. Basic tidy + overview</text>
+          <text x="360" y="174" text-anchor="middle" font-size="12" font-family="Georgia, serif">5. Download with a log</text>
+          <path d="M468 108 H540" stroke="#1f2a24" stroke-width="2" marker-end="url(#arrow)"/>
+          <rect x="544" y="48" width="168" height="120" rx="12" fill="#2f6f4e"/>
+          <text x="628" y="96" text-anchor="middle" font-size="14" fill="#f4efe6" font-family="Segoe UI, sans-serif">Proof</text>
+          <text x="628" y="120" text-anchor="middle" font-size="12" fill="#e8f0ea" font-family="Georgia, serif">questions + log</text>
+          <text x="628" y="140" text-anchor="middle" font-size="12" fill="#e8f0ea" font-family="Georgia, serif">trust enough to take it</text>
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8" fill="#1f2a24"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </section>
+
+    <section>
+      <h2>Core loop, in order</h2>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><p>Give the app a messy Excel file.</p></div>
+        <div class="step"><span class="n">2</span><p>See a breakdown of what’s going on: rows, columns, missing values.</p></div>
+        <div class="step"><span class="n">3</span><p>Answer prompts on what to change or not, with a place for extra instructions.</p></div>
+        <div class="step"><span class="n">4</span><p>If you skip extra instructions, it does a basic organization and overview.</p></div>
+        <div class="step"><span class="n">5</span><p>Download the same data as a tidier CSV or Excel file, with a log of what changed and what did not.</p></div>
+      </div>
+      <p>You come back because the next file is also messy, and you still don’t want to start from scratch.</p>
+    </section>
+
+    <section>
+      <h2>What “working” looks like</h2>
+      <p>On a screen, in about a minute: drop in a messy Excel file → see the breakdown and the questions → optionally type instructions (or skip) → get a basic organized file and overview → see the log → download.</p>
+      <p>The “oh, that’s cool” beat is the log plus the questions — enough trust to take the file — not a full insight report.</p>
+    </section>
+
+    <section>
+      <h2>Identity</h2>
+      <p>Not a chatbot. Not a generic AI-looking site. Not Excel, Tableau, or Power BI. Visually appealing but clean.</p>
+      <p>A cartoon character is the “owner” who takes the work. For this proof of concept it only appears while explore/process/clean is running, until results come back. Broom-and-sweep motion is later.</p>
+    </section>
+
+    <section>
+      <h2>Why this matters</h2>
+      <p>Internship messy Excel took hours or days before insights were even possible. You want to fear messy data less, keep a human check so bad cleaning doesn’t cost money, and eventually make something other people might use as a data/digital product. This hackathon is the working first slice, not the business.</p>
+    </section>
+
+    <section>
+      <h2>Now, later, cut</h2>
+      <div class="tabs" role="tablist" aria-label="Scope boundary">
+        <button type="button" role="tab" id="tab-now" data-panel="now" aria-selected="true" aria-controls="panel-now">Now</button>
+        <button type="button" role="tab" id="tab-later" data-panel="later" aria-selected="false" aria-controls="panel-later">Later</button>
+        <button type="button" role="tab" id="tab-cut" data-panel="cut" aria-selected="false" aria-controls="panel-cut">Cut</button>
+      </div>
+      <div id="panel-now" class="panel active" role="tabpanel" aria-labelledby="tab-now">
+        <ul>
+          <li>One file type: Excel</li>
+          <li>Breakdown: rows, columns, missing values</li>
+          <li>Prompts on what to change or not, plus a place for extra instructions</li>
+          <li>If no extra instructions: basic organization and overview</li>
+          <li>Downloadable tidier CSV or Excel of the same data</li>
+          <li>Log of what was changed and what was not</li>
+          <li>Subtle cartoon character only while processing</li>
+        </ul>
+      </div>
+      <div id="panel-later" class="panel" role="tabpanel" aria-labelledby="tab-later" hidden>
+        <ul>
+          <li>Insight report, charts, and visuals of the data</li>
+          <li>In-app end-to-end path (edit inside the app, full report)</li>
+          <li>Any data type beyond Excel</li>
+          <li>Richer cartoon (broom, sweeping files, stronger mascot)</li>
+          <li>Something other people pay for as a digital product</li>
+        </ul>
+      </div>
+      <div id="panel-cut" class="panel" role="tabpanel" aria-labelledby="tab-cut" hidden>
+        <ul>
+          <li>Chatbot / non-interactive generic AI look — wrong feel</li>
+          <li>Excel / Tableau / Power BI interface clone — wrong identity</li>
+          <li>Full commercial product and “does this already exist” research — not a 2–4 hour proof of concept</li>
+        </ul>
+      </div>
+      <noscript>
+        <h3>Now</h3>
+        <ul>
+          <li>Excel only, breakdown, questions, optional instructions, basic tidy, download, change log, subtle processing character</li>
+        </ul>
+        <h3>Later</h3>
+        <ul>
+          <li>Insight report, charts, other file types, richer cartoon, paid product</li>
+        </ul>
+        <h3>Cut</h3>
+        <ul>
+          <li>Chatbot look, BI-tool clone, full commercial launch</li>
+        </ul>
+      </noscript>
+    </section>
+
+    <p class="footer-note" style="font-family:'Segoe UI',sans-serif;color:var(--muted);font-size:0.85rem;">Canonical plan: <code>devpost/scope.md</code>. This page is a companion for review.</p>
+  </main>
+  <script>
+    const tabs = document.querySelectorAll('[role="tab"]');
+    const panels = document.querySelectorAll('[role="tabpanel"]');
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => t.setAttribute("aria-selected", "false"));
+        panels.forEach((p) => {
+          p.classList.remove("active");
+          p.hidden = true;
+        });
+        tab.setAttribute("aria-selected", "true");
+        const panel = document.getElementById(tab.getAttribute("aria-controls"));
+        panel.classList.add("active");
+        panel.hidden = false;
+      });
+    });
+  </script>
+</body>
+</html>

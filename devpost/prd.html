@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messy Data Cleaner — Product Requirements Document</title>
+  <style>
+    :root {
+      --tile-bg: #eef3f0;
+      --tile-line: #d8e3dc;
+      --paper: #ffffff;
+      --card-bg: #fbfdfc;
+      --ink: #1a2923;
+      --muted: #596f64;
+      --border: #d4e0d9;
+      --accent-mint: #2e7d58;
+      --accent-blue: #3b82a6;
+      --accent-yellow: #f59e0b;
+      --accent-pink: #d9466f;
+      --accent-clean: #10b981;
+      --tag-bg: #e3ede7;
+      --shadow: 0 4px 16px rgba(26, 41, 35, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--tile-bg);
+      background-image: 
+        linear-gradient(var(--tile-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--tile-line) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--ink);
+      line-height: 1.6;
+      padding-bottom: 4rem;
+    }
+
+    header {
+      max-width: 58rem;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 1.5rem;
+    }
+
+    .badge-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: var(--tag-bg);
+      color: var(--muted);
+    }
+
+    .badge.status {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    h1 {
+      font-size: 2.35rem;
+      line-height: 1.2;
+      margin: 0.25rem 0 0.5rem;
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .tagline {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 46rem;
+      margin: 0;
+    }
+
+    main {
+      max-width: 58rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin: 0 0 1rem;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: -0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* SVG Journey Diagram */
+    .diagram-container {
+      width: 100%;
+      overflow-x: auto;
+      background: #fafcfb;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+    }
+
+    .diagram-container svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+
+    /* Screen Walkthrough Stage Reveal */
+    .stage-nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .stage-btn {
+      background: #f0f5f2;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .stage-btn:hover {
+      background: #e4eee8;
+      color: var(--ink);
+    }
+
+    .stage-btn.active {
+      background: var(--accent-mint);
+      color: #ffffff;
+      border-color: var(--accent-mint);
+    }
+
+    .stage-panel {
+      display: none;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .stage-panel.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .stage-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: #e2ede6;
+      color: var(--accent-mint);
+    }
+
+    .wireframe-preview {
+      background: #ffffff;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      font-family: monospace;
+      font-size: 0.88rem;
+      color: #334155;
+    }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .tab-btn.active[data-tab="now"] { background: var(--accent-mint); color: #fff; border-color: var(--accent-mint); }
+    .tab-btn.active[data-tab="deferred"] { background: var(--accent-yellow); color: #fff; border-color: var(--accent-yellow); }
+    .tab-btn.active[data-tab="nongoals"] { background: var(--accent-pink); color: #fff; border-color: var(--accent-pink); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Acceptance Criteria Checklist */
+    .feature-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .feature-item {
+      background: #fcfdfc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+
+    .feature-name {
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .criteria-box {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.5rem 0 0;
+    }
+
+    .criteria-box li {
+      position: relative;
+      padding-left: 1.5rem;
+      font-size: 0.9rem;
+      color: #374151;
+      margin: 0.35rem 0;
+    }
+
+    .criteria-box li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--accent-mint);
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    /* Visual Palette Strip */
+    .palette-strip {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .color-swatch {
+      flex: 1;
+      min-width: 110px;
+      border-radius: 10px;
+      padding: 0.85rem 0.75rem;
+      border: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 90px;
+    }
+
+    .swatch-name { font-weight: 700; font-size: 0.8rem; }
+    .swatch-hex { font-family: monospace; font-size: 0.75rem; opacity: 0.8; }
+
+    .callout {
+      border-left: 4px solid var(--accent-blue);
+      background: #f0f7fa;
+      padding: 1rem 1.25rem;
+      border-radius: 0 10px 10px 0;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      max-width: 58rem;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge-bar">
+      <span class="badge">Devpost Hackathon</span>
+      <span class="badge">Product Requirements</span>
+      <span class="badge status" style="background: #d1fae5; color: #065f46; border-color: #a7f3d0;">Status: Approved</span>
+    </div>
+    <h1>Messy Data Cleaner</h1>
+    <p class="tagline">
+      A friendly web app that scans messy Excel files, asks before making changes, and hands back a tidier spreadsheet with an itemized change log.
+    </p>
+  </header>
+
+  <main>
+
+    <!-- Visual Identity & Metaphor -->
+    <section class="card">
+      <h2>✨ Visual Direction & Metaphor</h2>
+      <p class="section-desc">Derived from your visual inspiration: transforming chaotic paperwork into fresh, sparkling order.</p>
+      
+      <div class="palette-strip">
+        <div class="color-swatch" style="background: #eef3f0; color: #1a2923;">
+          <span class="swatch-name">Clean Tile Mint</span>
+          <span class="swatch-hex">#eef3f0</span>
+        </div>
+        <div class="color-swatch" style="background: #ffffff; color: #1a2923; border-color: #cbd5e1;">
+          <span class="swatch-name">Crisp Paper White</span>
+          <span class="swatch-hex">#ffffff</span>
+        </div>
+        <div class="color-swatch" style="background: #2e7d58; color: #ffffff;">
+          <span class="swatch-name">Fresh Spruce Green</span>
+          <span class="swatch-hex">#2e7d58</span>
+        </div>
+        <div class="color-swatch" style="background: #3b82a6; color: #ffffff;">
+          <span class="swatch-name">Spray Bottle Blue</span>
+          <span class="swatch-hex">#3b82a6</span>
+        </div>
+        <div class="color-swatch" style="background: #f59e0b; color: #ffffff;">
+          <span class="swatch-name">Sponge Yellow</span>
+          <span class="swatch-hex">#f59e0b</span>
+        </div>
+        <div class="color-swatch" style="background: #d9466f; color: #ffffff;">
+          <span class="swatch-name">Caddy Coral</span>
+          <span class="swatch-hex">#d9466f</span>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>The Mascot Role:</strong> A cheerful cartoon cleaning helper anchors the header and acts as the "working" companion while parsing and cleaning files. Not a chatbot; an encouraging partner who does the chores while keeping you in charge.
+      </div>
+    </section>
+
+    <!-- The Core Journey Diagram -->
+    <section class="card">
+      <h2>🗺️ End-to-End User Journey</h2>
+      <p class="section-desc">The complete 1-minute loop from chaotic spreadsheet to confident download.</p>
+      
+      <div class="diagram-container">
+        <svg viewBox="0 0 880 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- Connectors -->
+          <line x1="130" y1="90" x2="190" y2="90" stroke="#94a3b8" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="190,85 200,90 190,95" fill="#94a3b8" />
+
+          <line x1="310" y1="90" x2="370" y2="90" stroke="#94a3b8" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="370,85 380,90 370,95" fill="#94a3b8" />
+
+          <line x1="490" y1="90" x2="550" y2="90" stroke="#94a3b8" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="550,85 560,90 550,95" fill="#94a3b8" />
+
+          <line x1="670" y1="90" x2="730" y2="90" stroke="#94a3b8" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="730,85 740,90 730,95" fill="#94a3b8" />
+
+          <!-- Step 1 -->
+          <rect x="20" y="35" width="110" height="110" rx="14" fill="#ffffff" stroke="#2e7d58" stroke-width="2"/>
+          <circle cx="75" cy="65" r="16" fill="#e2ede6"/>
+          <text x="75" y="70" font-family="sans-serif" font-size="13" font-weight="bold" fill="#2e7d58" text-anchor="middle">1</text>
+          <text x="75" y="100" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923" text-anchor="middle">Arrival</text>
+          <text x="75" y="118" font-family="sans-serif" font-size="10" fill="#64748b" text-anchor="middle">Drop Excel File</text>
+
+          <!-- Step 2 -->
+          <rect x="200" y="35" width="110" height="110" rx="14" fill="#ffffff" stroke="#3b82a6" stroke-width="2"/>
+          <circle cx="255" cy="65" r="16" fill="#e0f2fe"/>
+          <text x="255" y="70" font-family="sans-serif" font-size="13" font-weight="bold" fill="#3b82a6" text-anchor="middle">2</text>
+          <text x="255" y="100" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923" text-anchor="middle">Instant Scan</text>
+          <text x="255" y="118" font-family="sans-serif" font-size="10" fill="#64748b" text-anchor="middle">Rows, Cols, Nulls</text>
+
+          <!-- Step 3 -->
+          <rect x="380" y="35" width="110" height="110" rx="14" fill="#ffffff" stroke="#f59e0b" stroke-width="2"/>
+          <circle cx="435" cy="65" r="16" fill="#fef3c7"/>
+          <text x="435" y="70" font-family="sans-serif" font-size="13" font-weight="bold" fill="#f59e0b" text-anchor="middle">3</text>
+          <text x="435" y="100" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923" text-anchor="middle">User Choices</text>
+          <text x="435" y="118" font-family="sans-serif" font-size="10" fill="#64748b" text-anchor="middle">Click Actions & Tips</text>
+
+          <!-- Step 4 -->
+          <rect x="560" y="35" width="110" height="110" rx="14" fill="#ffffff" stroke="#d9466f" stroke-width="2"/>
+          <circle cx="615" cy="65" r="16" fill="#fce7f3"/>
+          <text x="615" y="70" font-family="sans-serif" font-size="13" font-weight="bold" fill="#d9466f" text-anchor="middle">4</text>
+          <text x="615" y="100" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923" text-anchor="middle">Cleaning Up</text>
+          <text x="615" y="118" font-family="sans-serif" font-size="10" fill="#64748b" text-anchor="middle">Mascot at Work</text>
+
+          <!-- Step 5 -->
+          <rect x="740" y="35" width="110" height="110" rx="14" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
+          <circle cx="795" cy="65" r="16" fill="#d1fae5"/>
+          <text x="795" y="70" font-family="sans-serif" font-size="13" font-weight="bold" fill="#10b981" text-anchor="middle">5</text>
+          <text x="795" y="100" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a2923" text-anchor="middle">Trust & Export</text>
+          <text x="795" y="118" font-family="sans-serif" font-size="10" fill="#64748b" text-anchor="middle">Audit Log & Download</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Interactive Screen Walkthrough -->
+    <section class="card">
+      <h2>🖥️ Interactive Screen & State Walkthrough</h2>
+      <p class="section-desc">Click each stage to inspect the layout, controls, and behavioral specifications.</p>
+
+      <div class="stage-nav">
+        <button class="stage-btn active" onclick="showStage('stage-1', this)">1. Landing & Upload</button>
+        <button class="stage-btn" onclick="showStage('stage-2', this)">2. Scan Diagnostics</button>
+        <button class="stage-btn" onclick="showStage('stage-3', this)">3. Cleaning Prompts</button>
+        <button class="stage-btn" onclick="showStage('stage-4', this)">4. Mascot Processing</button>
+        <button class="stage-btn" onclick="showStage('stage-5', this)">5. Results & Audit Log</button>
+        <button class="stage-btn" onclick="showStage('stage-error', this)">⚠️ Error State</button>
+      </div>
+
+      <!-- Stage 1 -->
+      <div id="stage-1" class="stage-panel active">
+        <div class="stage-header">
+          <h3 class="stage-title">Stage 1: Arrival & File Upload</h3>
+          <span class="pill">Initial View</span>
+        </div>
+        <p>The user sees a clean welcoming surface with mascot header and dropzone. No overwhelming blank grids.</p>
+        <div class="wireframe-preview">
+[ Mascot Icon ] Welcome to Messy Data Cleaner<br>
+Tagline: Tame messy spreadsheets before you analyze.<br>
+<br>
++-------------------------------------------------------------+<br>
+|                     [ 📂 Excel File Icon ]                  |<br>
+|           Drag & Drop your .xlsx or .xls file here           |<br>
+|                        or [Browse Files]                    |<br>
++-------------------------------------------------------------+
+        </div>
+        <ul>
+          <li><strong>Input:</strong> Single file drag-and-drop or standard file picker.</li>
+          <li><strong>Supported:</strong> <code>.xlsx</code>, <code>.xls</code>.</li>
+        </ul>
+      </div>
+
+      <!-- Stage 2 -->
+      <div id="stage-2" class="stage-panel">
+        <div class="stage-header">
+          <h3 class="stage-title">Stage 2: Instant Scan & Diagnostics</h3>
+          <span class="pill">Post-Upload</span>
+        </div>
+        <p>Within seconds of dropping the file, the dropzone collapses into a file indicator and three key diagnostic cards appear.</p>
+        <div class="wireframe-preview">
+📄 File: monthly_sales_raw.xlsx (Checked ✓)<br>
++--------------------+  +--------------------+  +--------------------+<br>
+|  TOTAL ROWS        |  |  COLUMNS           |  |  MISSING CELLS     |<br>
+|  1,420             |  |  14                |  |  84 (4.2%)         |<br>
++--------------------+  +--------------------+  +--------------------+
+        </div>
+        <ul>
+          <li><strong>No Guessing:</strong> Raw dimensions are immediately transparent so the user knows what was read.</li>
+        </ul>
+      </div>
+
+      <!-- Stage 3 -->
+      <div id="stage-3" class="stage-panel">
+        <div class="stage-header">
+          <h3 class="stage-title">Stage 3: Interactive Cleaning Prompts</h3>
+          <span class="pill">Decision Time</span>
+        </div>
+        <p>The app offers clickable choices for what to fix. The human stays in the evaluator seat.</p>
+        <div class="wireframe-preview">
+What cleaning actions would you like to run?<br>
+[☑] Remove completely empty rows & columns<br>
+[☑] Trim trailing whitespace and spaces from text cells<br>
+[☑] Standardize column names (lowercase, remove odd symbols)<br>
+[ ] Drop rows with missing crucial identifiers<br>
+<br>
+Optional Instructions:<br>
+[ Type custom notes, e.g. "don't touch the Notes column"......... ]<br>
+<br>
+[ ✨ Clean My Spreadsheet ]
+        </div>
+        <ul>
+          <li><strong>Sensible Defaults:</strong> Non-destructive cleanup is pre-selected.</li>
+          <li><strong>Zero Mandatory Typing:</strong> User can just click or leave defaults.</li>
+        </ul>
+      </div>
+
+      <!-- Stage 4 -->
+      <div id="stage-4" class="stage-panel">
+        <div class="stage-header">
+          <h3 class="stage-title">Stage 4: Mascot Processing State</h3>
+          <span class="pill">Active</span>
+        </div>
+        <p>Reassuring progress state. Replaces button with cartoon cleaning animation.</p>
+        <div class="wireframe-preview">
+                [ 🧽 Animated Cleaning Mascot ]<br>
+             "Tidying up your rows and sweeping nulls..."<br>
+             [==================== 75% ====================]
+        </div>
+        <ul>
+          <li><strong>Boundary:</strong> Subtle, friendly, prevents double-clicks.</li>
+        </ul>
+      </div>
+
+      <!-- Stage 5 -->
+      <div id="stage-5" class="stage-panel">
+        <div class="stage-header">
+          <h3 class="stage-title">Stage 5: Trust Audit Log & Download</h3>
+          <span class="pill">Results</span>
+        </div>
+        <p>The hallmark trust feature: an explicit log of what changed and what didn't change.</p>
+        <div class="wireframe-preview">
+🎉 Spreadsheet Tidied! (1,392 rows, 14 columns)<br>
+<br>
+WHAT CHANGED:                           WHAT DIDN'T CHANGE:<br>
+• Removed 28 completely blank rows      • Preserved 12 partial rows with notes<br>
+• Trimmed spaces in 140 text cells      • Kept original currency formatting<br>
+• Standardized 14 header labels         • Left numeric calculations untouched<br>
+<br>
++-----------------------------------+   +-------------------------+<br>
+|   📥 DOWNLOAD CLEANED EXCEL FILE   |   |   Clean Another File    |<br>
++-----------------------------------+   +-------------------------+
+        </div>
+        <ul>
+          <li><strong>Export:</strong> One click delivers the cleaned workbook.</li>
+        </ul>
+      </div>
+
+      <!-- Error State -->
+      <div id="stage-error" class="stage-panel">
+        <div class="stage-header">
+          <h3 class="stage-title">Stage: Polite Error State</h3>
+          <span class="pill">Error Boundary</span>
+        </div>
+        <p>When an invalid file (e.g. PDF, PNG) or empty spreadsheet is provided.</p>
+        <div class="wireframe-preview">
+⚠️ Notice:<br>
+"Please upload an Excel file (.xlsx or .xls), this format is not supported."<br>
+<br>
+[ Try Another File ]
+        </div>
+        <ul>
+          <li><strong>Friendly tone:</strong> Non-technical explanation, quick recovery.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Scope Boundary Split -->
+    <section class="card">
+      <h2>🛡️ The POC Scope Boundary</h2>
+      <p class="section-desc">Firm division between what proves the concept now versus later additions.</p>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="now" onclick="switchTab('now', this)">What We're Building (Now)</button>
+        <button class="tab-btn" data-tab="deferred" onclick="switchTab('deferred', this)">Deferred (Later)</button>
+        <button class="tab-btn" data-tab="nongoals" onclick="switchTab('nongoals', this)">Explicit Non-Goals</button>
+      </div>
+
+      <div id="tab-now" class="tab-content active">
+        <ul>
+          <li>Single-page web application with retro clean tile aesthetic.</li>
+          <li>Drag-and-drop Excel file parser (<code>.xlsx</code> / <code>.xls</code>).</li>
+          <li>Instant diagnostic cards (row, column, and missing cell counts).</li>
+          <li>Clickable cleaning action toggles + optional prompt text input.</li>
+          <li>Active cartoon mascot processing screen.</li>
+          <li>Rule-based and instruction-aware spreadsheet cleaning engine.</li>
+          <li>Itemized <strong>What Changed & What Didn't</strong> audit log.</li>
+          <li>One-click download of the cleaned spreadsheet.</li>
+          <li>Polite error notice for unsupported formats and empty files.</li>
+        </ul>
+      </div>
+
+      <div id="tab-deferred" class="tab-content">
+        <ul>
+          <li><strong>Charts & Deep Analytical Reports:</strong> Preserved the focus on the cleaning trust loop first.</li>
+          <li><strong>In-Browser Grid Editor:</strong> User downloads clean file to work in Excel.</li>
+          <li><strong>Multi-Format Ingestion (CSV, JSON, SQL):</strong> Kept Excel-first to mirror real internship pain.</li>
+          <li><strong>User Logins & Cloud History:</strong> Ephemeral in-memory processing.</li>
+          <li><strong>Complex Mascot Animation Sequences:</strong> Subtle illustrations used instead.</li>
+        </ul>
+      </div>
+
+      <div id="tab-nongoals" class="tab-content">
+        <ul>
+          <li>Will not function as a chatbot or conversational text stream.</li>
+          <li>Will not attempt to clone Excel, Tableau, or Power BI.</li>
+          <li>Will not invent synthetic data or silently guess missing numbers without user consent.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Acceptance Criteria & Testing Checklist -->
+    <section class="card">
+      <h2>✅ Checkable Acceptance Criteria</h2>
+      <p class="section-desc">Observable evidence that will verify each behavior during the build in <code>5-build</code>.</p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-name">
+            <span>1. Ingestion & Validation</span>
+            <span class="pill">Screen Check</span>
+          </div>
+          <ul class="criteria-box">
+            <li>Dropping an <code>.xlsx</code> file begins parsing and reveals diagnostics within 2 seconds.</li>
+            <li>Uploading a non-Excel file displays: <em>"Please upload an Excel file, this format is not supported."</em></li>
+            <li>Uploading an empty workbook displays a polite empty-state notification.</li>
+          </ul>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-name">
+            <span>2. Diagnostic Inspection</span>
+            <span class="pill">Screen Check</span>
+          </div>
+          <ul class="criteria-box">
+            <li>Row count, column count, and null cell count match true workbook contents.</li>
+            <li>Diagnostics are formatted into readable cards without raw technical errors.</li>
+          </ul>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-name">
+            <span>3. Cleaning Actions & Prompts</span>
+            <span class="pill">Interaction Check</span>
+          </div>
+          <ul class="criteria-box">
+            <li>User can click to select or deselect cleaning action checkboxes.</li>
+            <li>User can type custom instructions into the prompt box (or leave blank).</li>
+            <li>Clicking "Clean Data" disables inputs and triggers processing state.</li>
+          </ul>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-name">
+            <span>4. Mascot Processing</span>
+            <span class="pill">Visual Check</span>
+          </div>
+          <ul class="criteria-box">
+            <li>Cartoon cleaning character graphic appears while cleaning runs.</li>
+            <li>Duplicate submissions are prevented while in progress.</li>
+          </ul>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-name">
+            <span>5. Audit Log & Export</span>
+            <span class="pill">Output Check</span>
+          </div>
+          <ul class="criteria-box">
+            <li>Change log lists specific actions under "What Changed" and "What Didn't Change".</li>
+            <li>"Download Cleaned File" button downloads valid, uncorrupted Excel/CSV file.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Messy Data Cleaner • Product Requirements Document (PRD) • Devpost Build With AI Basics
+  </footer>
+
+  <script>
+    function showStage(stageId, btn) {
+      document.querySelectorAll('.stage-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(stageId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
