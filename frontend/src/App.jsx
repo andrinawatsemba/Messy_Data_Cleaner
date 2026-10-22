@@ -2,18 +2,32 @@ import React, { useState } from 'react';
 import Header from './components/Header';
 import DropZone from './components/DropZone';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
+import CleaningControls from './components/CleaningControls';
+import MascotLoader from './components/MascotLoader';
 
 export default function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
   const [diagnostics, setDiagnostics] = useState(null);
+  const [isCleaning, setIsCleaning] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  const [cleaningOptions, setCleaningOptions] = useState({
+    remove_empty_rows: true,
+    remove_empty_cols: true,
+    trim_whitespace: true,
+    standardize_headers: true,
+    fill_missing_numbers: false,
+  });
+  const [customInstruction, setCustomInstruction] = useState('');
+  const [results, setResults] = useState(null);
 
   const handleFileSelect = async (file) => {
     setSelectedFile(file);
     setIsScanning(true);
     setErrorMessage(null);
     setDiagnostics(null);
+    setResults(null);
 
     const formData = new FormData();
     formData.append('file', file);
@@ -44,10 +58,43 @@ export default function App() {
     }
   };
 
+  const handleClean = async () => {
+    if (!selectedFile) return;
+
+    setIsCleaning(true);
+    setErrorMessage(null);
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('options', JSON.stringify(cleaningOptions));
+    formData.append('custom_instruction', customInstruction);
+
+    try {
+      const response = await fetch('/api/clean', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Failed to clean spreadsheet.');
+      }
+
+      setResults(data);
+    } catch (err) {
+      setErrorMessage(err.message || 'An error occurred while cleaning the spreadsheet.');
+    } finally {
+      setIsCleaning(false);
+    }
+  };
+
   const handleReset = () => {
     setSelectedFile(null);
     setDiagnostics(null);
+    setResults(null);
     setErrorMessage(null);
+    setCustomInstruction('');
   };
 
   return (
@@ -69,9 +116,19 @@ export default function App() {
 
         {!diagnostics ? (
           <DropZone onFileSelect={handleFileSelect} isScanning={isScanning} />
+        ) : isCleaning ? (
+          <MascotLoader />
         ) : (
           <div className="space-y-6 animate-fadeIn">
             <DiagnosticsPanel diagnostics={diagnostics} onReset={handleReset} />
+            <CleaningControls
+              options={cleaningOptions}
+              onOptionsChange={setCleaningOptions}
+              customInstruction={customInstruction}
+              onCustomInstructionChange={setCustomInstruction}
+              onClean={handleClean}
+              isCleaning={isCleaning}
+            />
           </div>
         )}
       </main>

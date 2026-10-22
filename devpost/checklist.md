@@ -9,7 +9,7 @@ Build mode: fast
 
 ## Slices
 
-- [ ] **1. File Ingestion, Scan Engine & Live Diagnostics Panel**
+- [x] **1. File Ingestion, Scan Engine & Live Diagnostics Panel**
   Becomes usable: A running web app where you can drop an Excel file onto the retro mint-tile surface and immediately see live diagnostic cards (total rows, columns, and missing cell counts) computed by the Python backend. Dropping an invalid file triggers a friendly inline alert.
   Why now: Bootstraps the full stack end to end (React + Vite + Tailwind on the frontend, FastAPI + pandas + openpyxl on the backend), verifies client-server communication via `/api/scan`, and establishes the visual layout.
   PRD ref: `prd.md > Features and Behavior (1. Excel File Ingestion & Validation, 2. Workbook Breakdown & Diagnostic Summary)`, `prd.md > Screens and Layout`
