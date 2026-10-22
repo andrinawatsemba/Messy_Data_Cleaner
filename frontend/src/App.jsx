@@ -70,8 +70,8 @@ export default function App() {
     formData.append('options', JSON.stringify(cleaningOptions));
     formData.append('custom_instruction', customInstruction);
 
-    // Ensure animation displays for at least 1.8 seconds so it is clearly visible
-    const minAnimationDelay = new Promise((resolve) => setTimeout(resolve, 1800));
+    // Keep mascot cleaning animation visible for 3.5 seconds so user can enjoy it
+    const minAnimationDelay = new Promise((resolve) => setTimeout(resolve, 3500));
 
     try {
       const [response] = await Promise.all([
@@ -137,7 +137,7 @@ export default function App() {
 
       <main className="mt-8 space-y-6">
         {errorMessage && (
-          <div className="p-4 bg-caddy-light border-2 border-caddy/30 rounded-2xl flex items-center justify-between text-caddy text-sm font-bold shadow-sm animate-fadeIn">
+          <div className="p-4 bg-caddy-light border-2 border-caddy/40 rounded-2xl flex items-center justify-between text-caddy text-sm font-bold shadow-sm animate-fadeIn">
             <span>{errorMessage}</span>
             <button
               onClick={() => setErrorMessage(null)}

@@ -3,31 +3,31 @@
 @tailwind utilities;
 
 body {
-  background-color: #e6f0eb;
+  background-color: #f6f1e5;
   background-image: 
-    linear-gradient(#c8ded3 1.5px, transparent 1.5px),
-    linear-gradient(90deg, #c8ded3 1.5px, transparent 1.5px);
-  background-size: 28px 28px;
+    linear-gradient(#d3c6ae 1.5px, transparent 1.5px),
+    linear-gradient(90deg, #d3c6ae 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  color: #1a2923;
+  color: #23221e;
 }
 
 /* Custom whimsical animations */
 @keyframes bob {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(-3deg); }
+  50% { transform: translateY(-7px) rotate(-2deg); }
 }
 
 .animate-bob {
-  animation: bob 2s ease-in-out infinite;
+  animation: bob 2.2s ease-in-out infinite;
 }
 
 @keyframes sweep {
   0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-10deg); }
-  75% { transform: rotate(10deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
 }
 
 .animate-sweep {
-  animation: sweep 1.2s ease-in-out infinite;
+  animation: sweep 1.4s ease-in-out infinite;
 }

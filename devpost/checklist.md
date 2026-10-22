@@ -56,6 +56,11 @@ Build mode: fast
 
 ## Final Review
 
+- [ ] Remove yellow wavy underline from header title
+- [ ] Remove emoji from 'The human-in-the-loop spreadsheet cleaner' badge
+- [ ] Update background to warm cream parchment with more visible graph grid lines
+- [ ] Extend cleaning mascot animation duration to ~3.5s so it is clearly enjoyed
+- [ ] Blend warm library/parchment aesthetic into card borders and accents for a soulful feel
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

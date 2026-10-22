@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { UploadCloud, FileSpreadsheet, AlertCircle, FileCheck2 } from 'lucide-react';
+import { UploadCloud, FileSpreadsheet, AlertCircle } from 'lucide-react';
 
 export default function DropZone({ onFileSelect, isScanning }) {
   const [isDragOver, setIsDragOver] = useState(false);
@@ -53,7 +53,7 @@ export default function DropZone({ onFileSelect, isScanning }) {
         className={`relative border-3 border-dashed rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-300 shadow-md ${
           isDragOver
             ? 'border-spruce bg-spruce-light/50 scale-[1.02] shadow-lg'
-            : 'border-cardborder bg-white hover:border-spray hover:shadow-lg hover:bg-slate-50/70'
+            : 'border-warmborder-strong bg-parchment-card hover:border-spruce hover:shadow-lg hover:bg-parchment-light/80'
         } ${isScanning ? 'pointer-events-none opacity-60' : ''}`}
       >
         <input
@@ -69,27 +69,27 @@ export default function DropZone({ onFileSelect, isScanning }) {
         />
 
         <div className="flex flex-col items-center">
-          {/* Big, Colorful Central Icon */}
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-spray-light text-spray flex items-center justify-center mb-5 border-2 border-spray/30 shadow-inner group-hover:scale-110 transition-transform">
+          {/* Big, Warm Study Icon */}
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-wood-light text-wood flex items-center justify-center mb-5 border-2 border-warmborder shadow-inner group-hover:scale-110 transition-transform">
             {isScanning ? (
-              <div className="w-10 h-10 border-4 border-spray border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-spruce border-t-transparent rounded-full animate-spin" />
             ) : (
-              <FileSpreadsheet className="w-12 h-12 text-spray" />
+              <FileSpreadsheet className="w-12 h-12 text-wood" />
             )}
           </div>
 
-          <span className="px-3.5 py-1 bg-sponge-light text-sponge font-black rounded-full text-xs uppercase tracking-wider mb-2 border border-sponge/30">
-            {isScanning ? 'Reading Sheets...' : 'Ready For Messy Data'}
+          <span className="px-3.5 py-1 bg-parchment text-muted font-bold rounded-full text-xs uppercase tracking-wider mb-2 border border-warmborder">
+            {isScanning ? 'Reading Workbook...' : 'Ready For Messy Data'}
           </span>
 
           <h3 className="text-xl sm:text-2xl font-black text-ink">
             {isScanning ? 'Scanning your spreadsheet...' : 'Drop your messy Excel file here'}
           </h3>
           <p className="mt-2 text-sm text-muted max-w-md font-medium">
-            Drag in your <code className="px-2 py-0.5 bg-slate-100 rounded-md text-ink font-mono font-bold text-xs border border-slate-200">.xlsx</code> or <code className="px-2 py-0.5 bg-slate-100 rounded-md text-ink font-mono font-bold text-xs border border-slate-200">.xls</code> workbook, or click anywhere to browse.
+            Drag in your <code className="px-2 py-0.5 bg-parchment-light rounded-md text-ink font-mono font-bold text-xs border border-warmborder">.xlsx</code> or <code className="px-2 py-0.5 bg-parchment-light rounded-md text-ink font-mono font-bold text-xs border border-warmborder">.xls</code> workbook, or click anywhere to browse.
           </p>
 
-          <div className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-spray text-white font-bold rounded-xl text-sm shadow-sm hover:bg-spray/90 transition-colors">
+          <div className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-spruce hover:bg-spruce-hover text-white font-bold rounded-xl text-sm shadow-sm transition-colors">
             <UploadCloud className="w-4 h-4" />
             <span>Select File From Computer</span>
           </div>

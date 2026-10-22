@@ -7,30 +7,40 @@ export default {
   theme: {
     extend: {
       colors: {
-        tile: {
-          bg: '#eef3f0',
-          line: '#d8e3dc',
+        parchment: {
+          DEFAULT: '#fdfbf7',
+          light: '#fcf8ee',
+          card: '#fffdfa',
+        },
+        warmborder: {
+          DEFAULT: '#ded2bd',
+          subtle: '#ebdfcb',
+          strong: '#cbbda4',
         },
         spruce: {
-          DEFAULT: '#2e7d58',
-          hover: '#246546',
-          light: '#e2ede6',
+          DEFAULT: '#2c5842',
+          hover: '#224634',
+          light: '#e5eee8',
+        },
+        wood: {
+          DEFAULT: '#8b5e3c',
+          light: '#f5eee6',
+          dark: '#633e22',
         },
         spray: {
-          DEFAULT: '#3b82a6',
-          light: '#e0f2fe',
+          DEFAULT: '#347596',
+          light: '#e1eff5',
         },
         sponge: {
-          DEFAULT: '#f59e0b',
-          light: '#fef3c7',
+          DEFAULT: '#cf7b19',
+          light: '#fbf0e0',
         },
         caddy: {
-          DEFAULT: '#d9466f',
-          light: '#fce7f3',
+          DEFAULT: '#c24b64',
+          light: '#fcedf0',
         },
-        ink: '#1a2923',
-        muted: '#596f64',
-        cardborder: '#d4e0d9',
+        ink: '#23221e',
+        muted: '#69645a',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

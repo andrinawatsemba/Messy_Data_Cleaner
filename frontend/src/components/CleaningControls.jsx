@@ -22,43 +22,43 @@ export default function CleaningControls({
       title: 'Remove completely empty rows',
       desc: 'Purges blank separator rows and accidental empty spaces.',
       badge: 'Recommended',
-      badgeColor: 'bg-spruce-light text-spruce',
+      badgeColor: 'bg-spruce-light text-spruce border-spruce/30',
     },
     {
       key: 'remove_empty_cols',
       title: 'Remove completely empty columns',
       desc: 'Drops unnamed or blank columns that hold zero data.',
       badge: 'Recommended',
-      badgeColor: 'bg-spruce-light text-spruce',
+      badgeColor: 'bg-spruce-light text-spruce border-spruce/30',
     },
     {
       key: 'trim_whitespace',
       title: 'Trim leading & trailing whitespace in text cells',
       desc: 'Fixes accidental spaces like " Alice " -> "Alice" across all columns.',
       badge: 'Recommended',
-      badgeColor: 'bg-spray-light text-spray',
+      badgeColor: 'bg-wood-light text-wood border-wood/30',
     },
     {
       key: 'standardize_headers',
       title: 'Standardize column headers',
       desc: 'Converts strange symbols and spaces to clean, readable snake_case.',
       badge: 'Tidy Headers',
-      badgeColor: 'bg-spray-light text-spray',
+      badgeColor: 'bg-wood-light text-wood border-wood/30',
     },
     {
       key: 'fill_missing_numbers',
       title: 'Fill missing numeric cells with 0',
       desc: 'Replaces blank numbers with 0. Keep unchecked to preserve as empty.',
       badge: 'Optional',
-      badgeColor: 'bg-sponge-light text-sponge',
+      badgeColor: 'bg-sponge-light text-sponge border-sponge/30',
     },
   ];
 
   return (
-    <div className="bg-white border-2 border-cardborder rounded-3xl p-6 sm:p-8 shadow-md space-y-6">
-      <div className="flex items-center justify-between pb-4 border-b-2 border-slate-100">
+    <div className="bg-parchment-card border-2 border-warmborder rounded-3xl p-6 sm:p-8 shadow-md space-y-6">
+      <div className="flex items-center justify-between pb-4 border-b-2 border-warmborder/60">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-spruce-light text-spruce rounded-xl">
+          <div className="p-2.5 bg-spruce-light text-spruce rounded-xl border border-spruce/20">
             <SlidersHorizontal className="w-5 h-5" />
           </div>
           <div>
@@ -78,15 +78,15 @@ export default function CleaningControls({
               onClick={() => toggleOption(item.key)}
               className={`flex items-start justify-between gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                 isChecked
-                  ? 'border-spruce bg-spruce-light/25 shadow-sm'
-                  : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/70'
+                  ? 'border-spruce bg-spruce-light/30 shadow-sm'
+                  : 'border-warmborder/60 bg-parchment hover:border-warmborder-strong hover:bg-parchment-light'
               }`}
             >
               <div className="flex items-start gap-3.5">
                 <button
                   type="button"
                   className={`mt-0.5 flex-shrink-0 transition-colors ${
-                    isChecked ? 'text-spruce' : 'text-slate-300'
+                    isChecked ? 'text-spruce' : 'text-slate-400'
                   }`}
                 >
                   {isChecked ? (
@@ -101,7 +101,7 @@ export default function CleaningControls({
                 </div>
               </div>
 
-              <span className={`text-[11px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider flex-shrink-0 ${item.badgeColor}`}>
+              <span className={`text-[11px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider flex-shrink-0 border ${item.badgeColor}`}>
                 {item.badge}
               </span>
             </div>
@@ -110,7 +110,7 @@ export default function CleaningControls({
       </div>
 
       {/* Custom Instruction Box */}
-      <div className="pt-5 border-t-2 border-slate-100">
+      <div className="pt-5 border-t-2 border-warmborder/60">
         <div className="flex items-center gap-2 text-sm font-bold text-ink mb-1.5">
           <Wand2 className="w-4 h-4 text-sponge" />
           <span>Custom Instructions (Optional AI Prompt)</span>
@@ -123,7 +123,7 @@ export default function CleaningControls({
           onChange={(e) => onCustomInstructionChange(e.target.value)}
           placeholder="e.g. 'delete rows where status is draft' or 'standardize date formats'"
           rows={2}
-          className="w-full text-sm p-3.5 border-2 border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-spruce/30 focus:border-spruce bg-slate-50/50 font-medium"
+          className="w-full text-sm p-3.5 border-2 border-warmborder rounded-2xl focus:outline-none focus:ring-2 focus:ring-spruce/30 focus:border-spruce bg-parchment font-medium"
         />
       </div>
 
